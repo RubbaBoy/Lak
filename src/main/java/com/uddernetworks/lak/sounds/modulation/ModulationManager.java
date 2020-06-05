@@ -13,7 +13,7 @@ public interface ModulationManager {
      *
      * @param soundVariant The {@link SoundVariant} to add the modulator to
      * @param modulationId The {@link ModulationId} to identify the modulator being constructed
-     * @param data The {@link ModulatorData} containing relevant data to construct the modulator
+     * @param data         The {@link ModulatorData} containing relevant data to construct the modulator
      */
     void addOrModifyModulator(SoundVariant soundVariant, ModulationId modulationId, ModulatorData data);
 }
