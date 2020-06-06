@@ -32,8 +32,7 @@ public interface SoundManager {
 
     /**
      * Adds a {@link SoundVariant} based off of a given {@link Sound}.
-     * To add a {@link Sound}, see {@link #addSound(Sound)}, which must be done before this method if the {@link Sound}
-     * has just been created.
+     * If the {@link Sound} has not been addeed via {@link #addSound(Sound)}, it will be added automatically.
      *
      * @param sound The base {@link Sound}.
      * @return The created {@link SoundVariant}

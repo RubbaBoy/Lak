@@ -27,6 +27,13 @@ public interface SoundVariant {
     Sound getSound();
 
     /**
+     * Sets the core, unmodified {@link Sound}.
+     *
+     * @param sound The {@link Sound} to set
+     */
+    void setSound(Sound sound);
+
+    /**
      * Gets the {@link SoundVariant}'s description.
      *
      * @return The {@link SoundVariant}'s description.
