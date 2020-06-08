@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -20,8 +21,14 @@ public class DefaultSoundVariant implements SoundVariant {
     private final List<SoundModulation> soundModulators = new ArrayList<>();
 
     public DefaultSoundVariant(UUID id, Sound sound) {
+        this(id, sound, null, null);
+    }
+
+    public DefaultSoundVariant(UUID id, Sound sound, String description, Color color) {
         this.id = id;
         this.sound = sound;
+        this.description = description;
+        this.color = color;
     }
 
     @Override
@@ -65,7 +72,26 @@ public class DefaultSoundVariant implements SoundVariant {
     }
 
     @Override
+    public void setModulators(List<SoundModulation> soundModulators) {
+        this.soundModulators.clear();
+        this.soundModulators.addAll(soundModulators);
+    }
+
+    @Override
     public void addModulator(SoundModulation soundModulation) {
         soundModulators.add(soundModulation);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DefaultSoundVariant that = (DefaultSoundVariant) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

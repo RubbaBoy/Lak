@@ -69,6 +69,13 @@ public interface SoundVariant {
     List<SoundModulation> getModulators();
 
     /**
+     * Sets all {@link SoundModulation}s to the given list. Used for initialization purposes.
+     *
+     * @param soundModulators The {@link SoundModulation}s to set
+     */
+    void setModulators(List<SoundModulation> soundModulators);
+
+    /**
      * Adds the given {@link SoundModulation}. If one already exists of the same type, it is overridden.
      *
      * @param soundModulation The {@link SoundModulation} to add

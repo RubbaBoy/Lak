@@ -1,5 +1,6 @@
 package com.uddernetworks.lak.sounds;
 
+import java.nio.file.Path;
 import java.util.UUID;
 
 /**
@@ -13,4 +14,11 @@ public interface Sound {
      * @return The UUID
      */
     UUID getId();
+
+    /**
+     * The path of the filesystem where the sound is located.
+     *
+     * @return The path of the sound
+     */
+    Path getPath();
 }

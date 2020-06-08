@@ -1,16 +1,23 @@
 package com.uddernetworks.lak.sounds.modulation;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum ModulationId {
-    VOLUME(0),
-    PITCH(1);
+    VOLUME((byte) 0),
+    PITCH((byte) 1);
 
-    private int id;
+    private final byte id;
 
-    ModulationId(int id) {
+    ModulationId(byte id) {
         this.id = id;
     }
 
-    public int getId() {
+    public byte getId() {
         return id;
+    }
+
+    public static Optional<ModulationId> getFromId(byte id) {
+        return Arrays.stream(values()).filter(modulationId -> modulationId.id == id).findFirst();
     }
 }

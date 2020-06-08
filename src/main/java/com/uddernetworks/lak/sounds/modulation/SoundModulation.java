@@ -1,19 +1,29 @@
 package com.uddernetworks.lak.sounds.modulation;
 
+import com.uddernetworks.lak.sounds.SoundVariant;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.Clip;
+import java.nio.ByteBuffer;
 
 /**
  * An interface to hold modulations to be made to sounds, such as pitch or volume, depending on the implementation.
  */
-public interface SoundModulation {
+public abstract class SoundModulation {
 
     /**
      * Gets the {@link ModulationId} defined for the {@link SoundModulation} implementation.
      *
      * @return The {@link ModulationId}
      */
-    ModulationId getId();
+    abstract public ModulationId getId();
+
+    /**
+     * Gets the {@link SoundVariant} that is bound to the current {@link SoundModulation}. This is final.
+     *
+     * @return The {@link SoundVariant}
+     */
+    abstract public SoundVariant getSoundVariant();
 
     /**
      * Updates the current {@link SoundModulation} with the given properties data provided by a source such as a REST
@@ -22,7 +32,7 @@ public interface SoundModulation {
      * @param data The properties data to update the {@link SoundModulation} from. See relevant implementation
      *             for details on what is acceptable. Invalid/unused keys are disregarded.
      */
-    void updateFromEndpoint(ModulatorData data);
+    abstract public void updateFromEndpoint(ModulatorData data);
 
     /**
      * Modulates the given {@link AudioFormat} with the current modulation settings.
@@ -31,5 +41,18 @@ public interface SoundModulation {
      * @param clip The {@link Clip} to be used if the implementation requires it
      * @return The modulated {@link AudioFormat}. If null, the {@link AudioFormat} is assumed to be unmodified
      */
-    AudioFormat modulateSound(AudioFormat audioFormat, Clip clip);
+    abstract public AudioFormat modulateSound(AudioFormat audioFormat, Clip clip);
+
+    /**
+     * Serialize the modulation so it can be inserted into the database.
+     * It is expected that the first byte of data represents the {@link ModulationId#getId()} value.
+     * The remaining bytes are up for the modulation implementation to create and resolve.
+     *
+     * @return The serialized Long
+     */
+    public byte[] serialize() {
+        var output = ByteBuffer.allocate(2);
+        output.putShort(getId().getId());
+        return output.array();
+    }
 }
