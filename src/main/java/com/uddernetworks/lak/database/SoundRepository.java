@@ -3,6 +3,7 @@ package com.uddernetworks.lak.database;
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundVariant;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -11,6 +12,7 @@ public interface SoundRepository {
 
     /**
      * Initializes the database with relevant connections.
+     * Should include the annotation {@link PostConstruct}.
      *
      * @throws IOException If an exception occurs
      */
