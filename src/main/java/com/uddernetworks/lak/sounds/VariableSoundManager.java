@@ -1,7 +1,9 @@
 package com.uddernetworks.lak.sounds;
 
+import com.uddernetworks.lak.database.SoundRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,8 +16,13 @@ public class VariableSoundManager implements SoundManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VariableSoundManager.class);
 
-    private List<Sound> sounds = new ArrayList<>();
-    private List<SoundVariant> soundVariants = new ArrayList<>();
+    private final SoundRepository soundRepository;
+    private final List<Sound> sounds = new ArrayList<>();
+    private final List<SoundVariant> soundVariants = new ArrayList<>();
+
+    public VariableSoundManager(@Qualifier("mySQLSoundRepository") SoundRepository soundRepository) {
+        this.soundRepository = soundRepository;
+    }
 
     @Override
     public List<SoundVariant> getAllSounds() {
@@ -33,6 +40,18 @@ public class VariableSoundManager implements SoundManager {
     }
 
     @Override
+    public void removeSound(Sound sound) {
+        removeSound(sound.getId());
+    }
+
+    @Override
+    public void removeSound(UUID soundUUID) {
+        if (sounds.removeIf(sound -> sound.getId().equals(soundUUID))) {
+            soundRepository.removeSound(soundUUID);
+        }
+    }
+
+    @Override
     public void setSounds(List<Sound> sounds) {
         if (!this.sounds.isEmpty()) {
             LOGGER.warn("Tried to invoke VariableSoundManager#setSounds(List<Sound>) while sounds list is populated");
@@ -45,6 +64,7 @@ public class VariableSoundManager implements SoundManager {
     @Override
     public void addSound(Sound sound) {
         sounds.add(sound);
+        soundRepository.addSound(sound);
     }
 
     @Override
@@ -68,12 +88,27 @@ public class VariableSoundManager implements SoundManager {
             addSound(sound);
         }
 
-        return new DefaultSoundVariant(UUID.randomUUID(), sound);
+        var variant = new DefaultSoundVariant(UUID.randomUUID(), sound);
+        soundRepository.addVariant(variant);
+        return variant;
+    }
+
+    @Override
+    public void removeSoundVariant(SoundVariant sound) {
+        removeSoundVariant(sound.getId());
+    }
+
+    @Override
+    public void removeSoundVariant(UUID variantUUID) {
+        if (soundVariants.removeIf(variant -> variant.getId().equals(variantUUID))) {
+            soundRepository.removeVariant(variantUUID);
+        }
     }
 
     @Override
     public void updateVariant(SoundVariant soundVariant) {
         soundVariants.removeIf(variant -> variant.getId().equals(soundVariant.getId()));
         soundVariants.add(soundVariant);
+        soundRepository.updateVariant(soundVariant);
     }
 }

@@ -4,6 +4,7 @@ import com.uddernetworks.lak.keys.DefaultKey;
 import com.uddernetworks.lak.keys.KeyEnum;
 import com.uddernetworks.lak.sounds.DefaultSoundVariant;
 import com.uddernetworks.lak.sounds.FileSound;
+import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundManager;
 import com.uddernetworks.lak.sounds.SoundVariant;
 import com.uddernetworks.lak.sounds.modulation.SoundModulation;
@@ -21,17 +22,20 @@ import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import static com.uddernetworks.lak.Utility.getBytesFromUUID;
 import static com.uddernetworks.lak.Utility.getUUIDFromBytes;
+import static com.uddernetworks.lak.database.DatabaseUtility.preparedExecute;
 
-@Component
+@Component("mySQLSoundRepository")
 public class MySQLSoundRepository implements SoundRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MySQLSoundRepository.class);
 
     private final JdbcTemplate jdbc;
-
     private final SoundManager soundManager;
     private final SoundModulationFactory soundModulationFactory;
 
@@ -76,6 +80,50 @@ public class MySQLSoundRepository implements SoundRepository {
             return new DefaultKey(KeyEnum.fromId(keyId).orElseThrow(() ->
                     new RuntimeException("Invalid KeyEnum ID " + keyId)), null, rs.getBoolean("loop"));
         });
+    }
+
+    @Override
+    public CompletableFuture<Void> addSound(Sound sound) {
+        return CompletableFuture.runAsync(() ->
+                jdbc.execute("INSERT INTO `sounds` VALUES (?, ?);", preparedExecute(stmt -> {
+                    stmt.setBytes(1, getBytesFromUUID(sound.getId()));
+                    stmt.setString(1, sound.getPath().toString());
+                })));
+    }
+
+    @Override
+    public CompletableFuture<Void> removeSound(UUID soundUUID) {
+        return CompletableFuture.runAsync(() ->
+                jdbc.execute("DELETE FROM `sounds` WHERE sound_id = ?;", preparedExecute(stmt ->
+                        stmt.setBytes(1, getBytesFromUUID(soundUUID)))));
+    }
+
+    @Override
+    public CompletableFuture<Void> addVariant(SoundVariant soundVariant) {
+        return CompletableFuture.runAsync(() ->
+                jdbc.execute("INSERT INTO `sound_variants` VALUES (?, ?, ?, ?);", preparedExecute(stmt -> {
+                    stmt.setBytes(1, getBytesFromUUID(soundVariant.getId()));
+                    stmt.setString(2, soundVariant.getDescription());
+                    stmt.setString(3, Integer.toString(soundVariant.getColor().getRGB(), 16));
+                    stmt.setBytes(4, getBytesFromUUID(soundVariant.getSound().getId()));
+                })));
+    }
+
+    @Override
+    public CompletableFuture<Void> removeVariant(UUID variantUUID) {
+        return CompletableFuture.runAsync(() ->
+                jdbc.execute("DELETE FROM `sound_variants` WHERE sound_id = ?;", preparedExecute(stmt ->
+                        stmt.setBytes(1, getBytesFromUUID(variantUUID)))));
+    }
+
+    @Override
+    public CompletableFuture<Void> updateVariant(SoundVariant soundVariant) {
+        return CompletableFuture.runAsync(() -> jdbc.execute("UPDATE `sound_variants` SET description = ?, color = ?, sound_id = ? WHERE variant_id = ?;", preparedExecute(stmt -> {
+            stmt.setString(1, soundVariant.getDescription());
+            stmt.setString(2, Integer.toString(soundVariant.getColor().getRGB(), 16));
+            stmt.setBytes(3, getBytesFromUUID(soundVariant.getSound().getId()));
+            stmt.setBytes(4, getBytesFromUUID(soundVariant.getId()));
+        })));
     }
 
     private String readSQL(String name) throws IOException {
