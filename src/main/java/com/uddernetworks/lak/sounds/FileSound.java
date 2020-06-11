@@ -1,5 +1,6 @@
 package com.uddernetworks.lak.sounds;
 
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.UUID;
 
@@ -9,11 +10,11 @@ import java.util.UUID;
 public class FileSound implements Sound {
 
     private final UUID id;
-    private final Path path;
+    private final URI uri;
 
-    public FileSound(UUID id, Path path) {
+    public FileSound(UUID id, URI uri) {
         this.id = id;
-        this.path = path;
+        this.uri = uri;
     }
 
     @Override
@@ -21,7 +22,16 @@ public class FileSound implements Sound {
         return id;
     }
 
-    public Path getPath() {
-        return path;
+    @Override
+    public URI getURI() {
+        return uri;
+    }
+
+    @Override
+    public String toString() {
+        return "FileSound{" +
+                "id=" + id +
+                ", uri=" + uri +
+                '}';
     }
 }

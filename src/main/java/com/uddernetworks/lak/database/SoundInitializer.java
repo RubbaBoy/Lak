@@ -19,6 +19,7 @@ import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
@@ -52,7 +53,7 @@ public class SoundInitializer {
         LOGGER.debug("Initializing sounds");
 
         soundManager.setSounds(jdbc.query("SELECT * FROM `sounds`;", (rs, index) ->
-                new FileSound(getUUIDFromBytes(rs.getBytes("sound_id")), Path.of(rs.getString("path")))));
+                new FileSound(getUUIDFromBytes(rs.getBytes("sound_id")), URI.create(rs.getString("path")))));
 
         soundManager.setVariants(jdbc.query("SELECT * FROM `sound_variants`;", (rs, index) ->
                 new DefaultSoundVariant(getUUIDFromBytes(rs.getBytes("variant_id")),

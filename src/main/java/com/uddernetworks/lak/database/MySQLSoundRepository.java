@@ -2,6 +2,7 @@ package com.uddernetworks.lak.database;
 
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundVariant;
+import org.apache.tomcat.util.buf.HexUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,7 +43,7 @@ public class MySQLSoundRepository implements SoundRepository {
         return CompletableFuture.runAsync(() ->
                 jdbc.execute("INSERT INTO `sounds` VALUES (?, ?);", preparedExecute(stmt -> {
                     stmt.setBytes(1, getBytesFromUUID(sound.getId()));
-                    stmt.setString(1, sound.getPath().toString());
+                    stmt.setString(2, sound.getURI().toString());
                 })));
     }
 
@@ -59,7 +60,7 @@ public class MySQLSoundRepository implements SoundRepository {
                 jdbc.execute("INSERT INTO `sound_variants` VALUES (?, ?, ?, ?);", preparedExecute(stmt -> {
                     stmt.setBytes(1, getBytesFromUUID(soundVariant.getId()));
                     stmt.setString(2, soundVariant.getDescription());
-                    stmt.setString(3, Integer.toString(soundVariant.getColor().getRGB(), 16));
+                    stmt.setString(3, Integer.toHexString(soundVariant.getColor().getRGB()));
                     stmt.setBytes(4, getBytesFromUUID(soundVariant.getSound().getId()));
                 })));
     }

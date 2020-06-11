@@ -4,17 +4,24 @@ import com.uddernetworks.lak.database.SoundRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
+import static com.uddernetworks.lak.database.DatabaseUtility.waitFuture;
 
 @Component("variableSoundManager")
 public class VariableSoundManager implements SoundManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VariableSoundManager.class);
+
+    @Value("${lak.database.synchronous}")
+    private boolean synchronous;
 
     private final SoundRepository soundRepository;
     private final List<Sound> sounds = new ArrayList<>();
@@ -25,8 +32,13 @@ public class VariableSoundManager implements SoundManager {
     }
 
     @Override
-    public List<SoundVariant> getAllSounds() {
+    public List<SoundVariant> getAllSoundVariants() {
         return soundVariants;
+    }
+
+    @Override
+    public List<Sound> getAllSounds() {
+        return sounds;
     }
 
     @Override
@@ -47,7 +59,7 @@ public class VariableSoundManager implements SoundManager {
     @Override
     public void removeSound(UUID soundUUID) {
         if (sounds.removeIf(sound -> sound.getId().equals(soundUUID))) {
-            soundRepository.removeSound(soundUUID);
+            waitFuture(synchronous, soundRepository.removeSound(soundUUID));
         }
     }
 
@@ -64,7 +76,7 @@ public class VariableSoundManager implements SoundManager {
     @Override
     public void addSound(Sound sound) {
         sounds.add(sound);
-        soundRepository.addSound(sound);
+        waitFuture(synchronous, soundRepository.addSound(sound));
     }
 
     @Override
@@ -89,7 +101,7 @@ public class VariableSoundManager implements SoundManager {
         }
 
         var variant = new DefaultSoundVariant(UUID.randomUUID(), sound);
-        soundRepository.addVariant(variant);
+        waitFuture(synchronous, soundRepository.addVariant(variant));
         return variant;
     }
 
@@ -101,7 +113,7 @@ public class VariableSoundManager implements SoundManager {
     @Override
     public void removeSoundVariant(UUID variantUUID) {
         if (soundVariants.removeIf(variant -> variant.getId().equals(variantUUID))) {
-            soundRepository.removeVariant(variantUUID);
+            waitFuture(synchronous, soundRepository.removeVariant(variantUUID));
         }
     }
 
@@ -109,6 +121,6 @@ public class VariableSoundManager implements SoundManager {
     public void updateVariant(SoundVariant soundVariant) {
         soundVariants.removeIf(variant -> variant.getId().equals(soundVariant.getId()));
         soundVariants.add(soundVariant);
-        soundRepository.updateVariant(soundVariant);
+        waitFuture(synchronous, soundRepository.updateVariant(soundVariant));
     }
 }

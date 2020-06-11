@@ -21,7 +21,7 @@ public class DefaultSoundVariant implements SoundVariant {
     private final List<SoundModulation> soundModulators = new ArrayList<>();
 
     public DefaultSoundVariant(UUID id, Sound sound) {
-        this(id, sound, null, null);
+        this(id, sound, "", new Color(0));
     }
 
     public DefaultSoundVariant(UUID id, Sound sound, String description, Color color) {

@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `sounds` (
 CREATE TABLE IF NOT EXISTS `sound_variants` (
     `variant_id`  binary(16)   NOT NULL,
     `description` varchar(256) NULL,
-    `color`       char(6)      NULL,
+    `color`       char(8)      NULL,
     `sound_id`    binary(16)   NOT NULL,
 
     PRIMARY KEY (`variant_id`),

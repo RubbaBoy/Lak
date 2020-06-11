@@ -1,5 +1,6 @@
 package com.uddernetworks.lak.sounds;
 
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.UUID;
 
@@ -20,5 +21,5 @@ public interface Sound {
      *
      * @return The path of the sound
      */
-    Path getPath();
+    URI getURI();
 }

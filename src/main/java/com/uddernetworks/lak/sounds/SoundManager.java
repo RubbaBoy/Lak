@@ -16,7 +16,14 @@ public interface SoundManager {
      *
      * @return All {@link Sound}s
      */
-    List<SoundVariant> getAllSounds();
+    List<Sound> getAllSounds();
+
+    /**
+     * Gets all {@link SoundVariant}s.
+     *
+     * @return All {@link SoundVariant}s
+     */
+    List<SoundVariant> getAllSoundVariants();
 
     /**
      * Checks if the given {@link Sound} has been added via {@link #addSound(Sound)}.
