@@ -22,9 +22,7 @@ public class URICombinedSerializer {
 
         @Override
         public void serialize(URI value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
-//            jsonGenerator.writeStartObject();
             jsonGenerator.writeString(value.toString());
-//            jsonGenerator.writeEndObject();
         }
     }
 
@@ -33,7 +31,6 @@ public class URICombinedSerializer {
         @Override
         public URI deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
             var treeNode = jsonParser.getCodec().readValue(jsonParser, String.class);
-//            var uri = (TextNode) treeNode;
 
             try {
                 return URI.create(treeNode);

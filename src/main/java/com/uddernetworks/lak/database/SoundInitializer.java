@@ -59,7 +59,7 @@ public class SoundInitializer {
                 new DefaultSoundVariant(getUUIDFromBytes(rs.getBytes("variant_id")),
                         soundManager.getSound(getUUIDFromBytes(rs.getBytes("sound_id"))).orElse(null),
                         rs.getString("description"),
-                        new Color(Integer.parseInt(rs.getString("color"), 16)))));
+                        new Color(Integer.parseInt(rs.getString("color"), 16), true))));
 
         // It is not just added one by one, as adding individually may cause issues down the line depending on the
         // implementation of SoundVariant's handling of adding individual modulators.
