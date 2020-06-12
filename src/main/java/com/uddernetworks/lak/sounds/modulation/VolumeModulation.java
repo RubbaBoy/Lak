@@ -41,13 +41,14 @@ public class VolumeModulation extends SoundModulation {
         return volume;
     }
 
-    public void setVolume(double volume) {
+    public VolumeModulation setVolume(double volume) {
         this.volume = volume;
+        return this;
     }
 
     @Override
     public void updateFromEndpoint(ModulatorData data) {
-        volume = data.get("volume");
+        volume = data.<Double>get("volume", 0D);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.uddernetworks.lak.sounds;
 
+import com.uddernetworks.lak.sounds.modulation.ModulationId;
 import com.uddernetworks.lak.sounds.modulation.SoundModulation;
 
 import java.awt.Color;
@@ -84,6 +85,11 @@ public class DefaultSoundVariant implements SoundVariant {
     @Override
     public void addModulator(SoundModulation soundModulation) {
         soundModulators.add(soundModulation);
+    }
+
+    @Override
+    public void removeModulator(ModulationId modulationId) {
+        soundModulators.removeIf(modulator -> modulator.getId() == modulationId);
     }
 
     @Override

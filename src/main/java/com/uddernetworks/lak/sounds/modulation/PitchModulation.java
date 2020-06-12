@@ -40,13 +40,14 @@ public class PitchModulation extends SoundModulation {
         return pitch;
     }
 
-    public void setPitch(double pitch) {
+    public PitchModulation setPitch(double pitch) {
         this.pitch = pitch;
+        return this;
     }
 
     @Override
     public void updateFromEndpoint(ModulatorData data) {
-        pitch = data.get("pitch");
+        pitch = data.<Double>get("pitch", 0D);
     }
 
     @Override

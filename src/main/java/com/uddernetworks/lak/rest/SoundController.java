@@ -1,5 +1,6 @@
 package com.uddernetworks.lak.rest;
 
+import com.uddernetworks.lak.rest.errors.ModulatorUpdateException;
 import com.uddernetworks.lak.sounds.FileSound;
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundManager;
@@ -131,6 +132,7 @@ public class SoundController {
             throw new SoundVariantNotFoundException(variantUUID);
         }
 
-        return modulationManager.addOrModifyModulator(soundVariantOptional.get(), updatingModulator.getId(), updatingModulator.getModulatorData());
+        return modulationManager.addOrModifyModulator(soundVariantOptional.get(), updatingModulator.getId(), updatingModulator.getModulatorData())
+                .orElseThrow(() -> new ModulatorUpdateException(updatingModulator.getModulatorData()));
     }
 }

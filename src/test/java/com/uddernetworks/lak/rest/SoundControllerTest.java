@@ -33,8 +33,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.uddernetworks.lak.Utility.args;
-import static com.uddernetworks.lak.Utility.preparedArgs;
 import static com.uddernetworks.lak.database.DatabaseUtility.queryArgs;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -148,7 +146,7 @@ public class SoundControllerTest {
 
         var result = jdbc.query("SELECT * FROM sounds WHERE sound_id = ?;", queryArgs(soundUUID), ResultList::new);
 
-//        // Ensure validity of data
+        // Ensure validity of data
         assertNotNull(result);
         assertTrue(result.hasNext());
         result.next();
@@ -196,6 +194,7 @@ public class SoundControllerTest {
         var description = "Some desc";
         var color = Color.RED;
         var json = objectMapper.readValue(post("updateVariant", Map.of("id", variant.getId(), "description", description, "color", color)), Map.class);
+
         assertEquals("ok", json.get("status"));
         assertEquals(firstSound, variant.getSound().getId());
         assertEquals(description, variant.getDescription());
@@ -213,29 +212,57 @@ public class SoundControllerTest {
 
     @Test
     void addModulator() throws JsonProcessingException {
+        // Add a random sound UUID to the SoundManager manually
         var soundUUID = UUID.randomUUID();
 
         var sound = addDatabaseSound(soundUUID);
         var variant = addDatabaseSoundVariant(sound);
 
+        // Make a request to the testing endpoint, adding a volume modulator
         var json = objectMapper.readValue(post("addModulator", Map.of("variantUUID", variant.getId(), "id", ModulationId.VOLUME.getId())), Map.class);
 
-        System.out.println("json = " + json);
-
-        var modulators = variant.getModulators();
-
-        assertEquals(1, modulators.size());
+        // Ensure it has been added
         assertEquals("ok", json.get("status"));
+        assertEquals(1, variant.getModulators().size());
     }
 
     @Test
-    void removeModulator() {
+    void removeModulator() throws JsonProcessingException {
+        // Add a random sound, variant, and modulator manually
+        var sound = addDatabaseSound(UUID.randomUUID());
+        var variant = addDatabaseSoundVariant(sound);
+        variant.addModulator(new VolumeModulation(variant));
 
+        // Ensure it starts off with 1 modulator
+        assertEquals(1, variant.getModulators().size());
+
+        // Make a request to the testing endpoint, removing the modulator with the given IDs
+        var json = objectMapper.readValue(post("removeModulator", Map.of("variantUUID", variant.getId(), "id", ModulationId.VOLUME.getId())), Map.class);
+
+        // Ensure it has been removed
+        assertEquals("ok", json.get("status"));
+        assertEquals(0, variant.getModulators().size());
     }
 
     @Test
-    void updateModulator() {
+    void updateModulator() throws JsonProcessingException {
+        // Add a random sound, variant, and modulator manually
+        var sound = addDatabaseSound(UUID.randomUUID());
+        var variant = addDatabaseSoundVariant(sound);
+        var modulation = new VolumeModulation(variant);
+        variant.addModulator(modulation);
 
+        // Send a request to the testing endpoint to update the modulator with a volume of 0.45
+        var json = (Map<?, ?>) objectMapper.readValue(post("updateModulator",
+                Map.of(
+                        "variantUUID", variant.getId(),
+                        "id", 0,
+                        "modulatorData", Map.of("volume", 0.45))), Map.class);
+
+        // Ensure the program data and returned data are correct
+        assertEquals(variant.getId().toString(), json.get("variant"));
+        assertEquals(0.45, ((Map<?, ?>) json.get("value")).get("volume"));
+        assertEquals(0.45, modulation.getVolume());
     }
 
     private Sound addDatabaseSound(UUID soundUUID) {

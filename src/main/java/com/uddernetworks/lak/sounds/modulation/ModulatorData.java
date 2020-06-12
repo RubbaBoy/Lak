@@ -30,7 +30,7 @@ public class ModulatorData {
      * @return The value associated with the given key, or null
      */
     public <T> T get(String key) {
-        return (T) data.get(key);
+        return get(key, null);
     }
 
     /**

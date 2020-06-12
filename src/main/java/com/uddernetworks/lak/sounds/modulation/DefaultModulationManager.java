@@ -34,6 +34,6 @@ public class DefaultModulationManager implements ModulationManager {
 
     @Override
     public void removeModulator(SoundVariant soundVariant, ModulationId id) {
-        soundVariant.getModulators().removeIf(modulator -> modulator.getId() == id);
+        soundVariant.removeModulator(id);
     }
 }

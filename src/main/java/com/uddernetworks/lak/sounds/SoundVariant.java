@@ -1,6 +1,7 @@
 package com.uddernetworks.lak.sounds;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.uddernetworks.lak.sounds.modulation.ModulationId;
 import com.uddernetworks.lak.sounds.modulation.SoundModulation;
 
 import java.awt.Color;
@@ -83,4 +84,11 @@ public interface SoundVariant {
      * @param soundModulation The {@link SoundModulation} to add
      */
     void addModulator(SoundModulation soundModulation);
+
+    /**
+     * Removes a given {@link SoundModulation} by its {@link ModulationId} if it has already been added or set.
+     *
+     * @param modulationId The {@link ModulationId} to remove
+     */
+    void removeModulator(ModulationId modulationId);
 }
