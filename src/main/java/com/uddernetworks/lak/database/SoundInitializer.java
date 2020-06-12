@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.uddernetworks.lak.Utility.colorFromHex;
 import static com.uddernetworks.lak.Utility.getUUIDFromBytes;
 
 /**
@@ -52,18 +53,18 @@ public class SoundInitializer {
     public void init() {
         LOGGER.debug("Initializing sounds");
 
-        soundManager.setSounds(jdbc.query("SELECT * FROM `sounds`;", (rs, index) ->
+        soundManager.setSounds(jdbc.query("SELECT * FROM sounds;", (rs, index) ->
                 new FileSound(getUUIDFromBytes(rs.getBytes("sound_id")), URI.create(rs.getString("path")))));
 
-        soundManager.setVariants(jdbc.query("SELECT * FROM `sound_variants`;", (rs, index) ->
+        soundManager.setVariants(jdbc.query("SELECT * FROM sound_variants;", (rs, index) ->
                 new DefaultSoundVariant(getUUIDFromBytes(rs.getBytes("variant_id")),
                         soundManager.getSound(getUUIDFromBytes(rs.getBytes("sound_id"))).orElse(null),
                         rs.getString("description"),
-                        new Color(Integer.parseInt(rs.getString("color"), 16), true))));
+                        colorFromHex(rs.getString("color")))));
 
         // It is not just added one by one, as adding individually may cause issues down the line depending on the
         // implementation of SoundVariant's handling of adding individual modulators.
-        jdbc.query("SELECT * FROM `modulators`;", (rs, index) -> {
+        jdbc.query("SELECT * FROM modulators;", (rs, index) -> {
             var variantOptional = soundManager.getVariant(getUUIDFromBytes(rs.getBytes("variant_id")));
             if (variantOptional.isPresent()) {
                 return soundModulationFactory.deserialize(variantOptional.get(), rs.getBytes("value"));

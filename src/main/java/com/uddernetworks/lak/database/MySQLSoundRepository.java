@@ -34,7 +34,7 @@ public class MySQLSoundRepository implements SoundRepository {
     @Override
     @PostConstruct
     public void init() throws IOException {
-        jdbc.execute("SET DATABASE SQL SYNTAX MYS TRUE");
+//        jdbc.execute("SET DATABASE SQL SYNTAX MYS TRUE");
 
         LOGGER.debug("Creating tables...");
         jdbc.execute(readResourceString("sql/tables.sql"));
@@ -43,7 +43,7 @@ public class MySQLSoundRepository implements SoundRepository {
     @Override
     public CompletableFuture<Void> addSound(Sound sound) {
         return CompletableFuture.runAsync(() ->
-                jdbc.execute("INSERT INTO `sounds` VALUES (?, ?);", preparedExecute(stmt -> {
+                jdbc.execute("INSERT INTO sounds VALUES (?, ?);", preparedExecute(stmt -> {
                     stmt.setBytes(1, getBytesFromUUID(sound.getId()));
                     stmt.setString(2, sound.getURI().toString());
                 })));
@@ -51,15 +51,20 @@ public class MySQLSoundRepository implements SoundRepository {
 
     @Override
     public CompletableFuture<Void> removeSound(UUID soundUUID) {
-        return CompletableFuture.runAsync(() ->
-                jdbc.execute("DELETE FROM `sounds` WHERE `sound_id` = ?;", preparedExecute(stmt ->
-                        stmt.setBytes(1, getBytesFromUUID(soundUUID)))));
+        return CompletableFuture.runAsync(() -> {
+            try {
+                jdbc.execute("DELETE FROM sounds WHERE sound_id = ?;", preparedExecute(stmt ->
+                        stmt.setBytes(1, getBytesFromUUID(soundUUID))));
+            } catch (Exception e) {
+                LOGGER.error("Errorooooo", e);
+            }
+        });
     }
 
     @Override
     public CompletableFuture<Void> addVariant(SoundVariant soundVariant) {
         return CompletableFuture.runAsync(() ->
-                jdbc.execute("INSERT INTO `sound_variants` VALUES (?, ?, ?, ?);", preparedExecute(stmt -> {
+                jdbc.execute("INSERT INTO sound_variants VALUES (?, ?, ?, ?);", preparedExecute(stmt -> {
                     stmt.setBytes(1, getBytesFromUUID(soundVariant.getId()));
                     stmt.setString(2, soundVariant.getDescription());
                     stmt.setString(3, hexFromColor(soundVariant.getColor()));
@@ -70,13 +75,13 @@ public class MySQLSoundRepository implements SoundRepository {
     @Override
     public CompletableFuture<Void> removeVariant(UUID variantUUID) {
         return CompletableFuture.runAsync(() ->
-                jdbc.execute("DELETE FROM `sound_variants` WHERE `sound_id` = ?;", preparedExecute(stmt ->
+                jdbc.execute("DELETE FROM sound_variants WHERE sound_id = ?;", preparedExecute(stmt ->
                         stmt.setBytes(1, getBytesFromUUID(variantUUID)))));
     }
 
     @Override
     public CompletableFuture<Void> updateVariant(SoundVariant soundVariant) {
-        return CompletableFuture.runAsync(() -> jdbc.execute("UPDATE `sound_variants` SET `description` = ?, `color` = ?, `sound_id` = ? WHERE `variant_id` = ?;", preparedExecute(stmt -> {
+        return CompletableFuture.runAsync(() -> jdbc.execute("UPDATE sound_variants SET description = ?, color = ?, sound_id = ? WHERE variant_id = ?;", preparedExecute(stmt -> {
             stmt.setString(1, soundVariant.getDescription());
             stmt.setString(2, hexFromColor(soundVariant.getColor()));
             stmt.setBytes(3, getBytesFromUUID(soundVariant.getSound().getId()));

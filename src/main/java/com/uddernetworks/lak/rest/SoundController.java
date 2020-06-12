@@ -60,7 +60,9 @@ public class SoundController {
     @PostMapping(path = "/addSound", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public @ResponseBody
     Sound addSound(@RequestBody SoundEndpointBodies.AddingSound addingSound) {
-        var sound = new FileSound(UUID.randomUUID(), URI.create(addingSound.getURI()));
+        var uuid = UUID.randomUUID();
+        LOGGER.warn("Adding sound: {}", uuid);
+        var sound = new FileSound(uuid, URI.create(addingSound.getURI()));
         soundManager.addSound(sound);
         return sound;
     }
@@ -77,7 +79,7 @@ public class SoundController {
     public @ResponseBody
     Map<String, Object> updateVariant(@RequestBody SoundEndpointBodies.UpdatingVariant updatingVariant) {
         LOGGER.warn("Request: {}", updatingVariant);
-        
+
         if (!soundManager.isSoundVariantAdded(updatingVariant.getId())) {
             throw new SoundVariantNotFoundException(updatingVariant.getId());
         }

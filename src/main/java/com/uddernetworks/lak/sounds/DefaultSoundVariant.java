@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Stored in the `sound_variant` table
+ * Stored in the sound_variant table
  */
 public class DefaultSoundVariant implements SoundVariant {
 

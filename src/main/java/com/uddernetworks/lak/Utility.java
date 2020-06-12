@@ -13,6 +13,16 @@ import java.util.stream.Collectors;
 public class Utility {
 
     /**
+     * Returns an object array from varargs
+     *
+     * @param args The args
+     * @return The args
+     */
+    public static <T> T[] args(T... args) {
+        return args;
+    }
+
+    /**
      * Clamps a value between two other inclusive values.
      *
      * @param value The value to clamp and return

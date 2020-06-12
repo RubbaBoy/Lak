@@ -9,6 +9,7 @@ import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundManager;
 import com.uddernetworks.lak.sounds.SoundVariant;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,25 +23,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-//import javax.transaction.Transactional;
-import javax.transaction.Transactional;
 import java.awt.Color;
 import java.net.URI;
-import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.uddernetworks.lak.database.DatabaseUtility.preparedExecute;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static com.uddernetworks.lak.Utility.args;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SoundControllerTest {
 
@@ -70,6 +65,15 @@ public class SoundControllerTest {
     public static void init() {
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+    }
+
+    @BeforeEach
+    public void resetSounds() {
+        // Removes all sounds and variants. Paired with this class being transactional, this ensures a clean
+        // SoundManager and database to work with each test in this class.
+        LOGGER.warn("Before each!");
+        soundManager.getAllSounds().clear();
+        soundManager.getAllSoundVariants().clear();
     }
 
     @Test
@@ -117,8 +121,6 @@ public class SoundControllerTest {
         // List all sounds from the testing endpoint
         var result = objectMapper.<List<SoundVariant>>readValue(get("/listVariants"), soundVariantType);
 
-        System.out.println("result = " + result);
-
         assertEquals(result.size(), 5);
 
         for (var soundVariant : result) {
@@ -140,13 +142,14 @@ public class SoundControllerTest {
         var soundUUID = created.getId();
         var path = created.getURI();
 
-        // Select the data that should have been added
-        var result = jdbc.query("SELECT * FROM `sounds`", ResultList::new);
+        var result = jdbc.query("SELECT * FROM sounds WHERE sound_id = ?;", args(Utility.getBytesFromUUID(soundUUID)), ResultList::new);
 
-        // Ensure validity of data
+//        // Ensure validity of data
         assertNotNull(result);
-        assertArrayEquals(Utility.getBytesFromUUID(soundUUID), result.get(0));
-        assertEquals(path, result.get(1));
+        assertTrue(result.hasNext());
+        result.next();
+        assertEquals(soundUUID, Utility.getUUIDFromBytes(result.get(0)));
+        assertEquals(path.toString(), result.get(1));
     }
 
     @Test
@@ -189,7 +192,6 @@ public class SoundControllerTest {
         var description = "Some desc";
         var color = Color.RED;
         var json = objectMapper.readValue(post("updateVariant", Map.of("id", variant.getId(), "description", description, "color", color)), Map.class);
-        System.out.println("json = " + json);
         assertEquals("ok", json.get("status"));
         assertEquals(firstSound, variant.getSound().getId());
         assertEquals(description, variant.getDescription());
@@ -205,22 +207,23 @@ public class SoundControllerTest {
 
     }
 
-    @Test
-    void addModulator() {
-
-    }
-
-    @Test
-    void removeModulator() {
-
-    }
-
-    @Test
-    void updateModulator() {
-
-    }
+//    @Test
+//    void addModulator() {
+//
+//    }
+//
+//    @Test
+//    void removeModulator() {
+//
+//    }
+//
+//    @Test
+//    void updateModulator() {
+//
+//    }
 
     private Sound addDatabaseSound(UUID soundUUID) {
+        System.out.println("addDatabaseSound soundUUID = " + soundUUID);
         var sound = new FileSound(soundUUID, SOUND_URI);
         soundManager.addSound(sound);
         return sound;
@@ -236,10 +239,7 @@ public class SoundControllerTest {
 
     private String post(String path, Map<String, Object> json) throws JsonProcessingException {
         var posting = objectMapper.writeValueAsString(json);
-        System.out.println("posting = " + posting);
-        var res = post(path, posting);
-        System.out.println("res = " + res);
-        return res;
+        return post(path, posting);
     }
 
     private String post(String path, String json) {

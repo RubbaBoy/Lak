@@ -24,7 +24,7 @@ public class KeyInitializer {
 //
 //    @PostConstruct
 //    public void init() {
-//        jdbc.query("SELECT * FROM `keys`;", (rs, index) -> {
+//        jdbc.query("SELECT * FROM keys;", (rs, index) -> {
 //            var keyId = rs.getInt("key");
 //            return new DefaultKey(KeyEnum.fromId(keyId).orElseThrow(() ->
 //                    new RuntimeException("Invalid KeyEnum ID " + keyId)), null, rs.getBoolean("loop"));

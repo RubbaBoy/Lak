@@ -7,34 +7,64 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public class ResultList {
 
     private final List<String> columns;
-    private final Map<String, Object> data;
+    private final Iterator<Map<String, Object>> iterator;
+    private Map<String, Object> currData;
 
     public ResultList(ResultSet resultSet) throws SQLException {
         this.columns = new ArrayList<>();
-        this.data = new HashMap<>();
+        var data = new ArrayList<Map<String, Object>>();
 
         var meta = resultSet.getMetaData();
-        if (resultSet.next()) {
-            for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
-                var name = meta.getColumnName(i);
-                columns.add(name);
-                data.put(name, resultSet.getObject(i));
-            }
+        var columnCount = resultSet.getMetaData().getColumnCount();
+        for (int i = 1; i <= columnCount; i++) {
+            var name = meta.getColumnName(i);
+            columns.add(name);
         }
+
+        while (resultSet.next()) {
+            var map = new HashMap<String, Object>();
+            for (int i = 1; i <= columnCount; i++) {
+                map.put(meta.getColumnName(i), resultSet.getObject(i));
+            }
+            data.add(map);
+        }
+
+        this.iterator = data.iterator();
+    }
+
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
+
+    public void next() {
+        currData = iterator.next();
+    }
+
+    public Map<String, Object> getCurrent() {
+        return currData;
     }
 
     public <T> T get(int index) {
-        return (T) data.get(columns.get(index));
+        return (T) currData.get(columns.get(index));
     }
 
     public <T> T get(String column) {
-        return (T) data.get(column);
+        return (T) currData.get(column);
     }
 
+    @Override
+    public String toString() {
+        return "ResultList{" +
+                "columns=" + columns +
+                ", iterator=" + iterator +
+                ", currData=" + currData +
+                '}';
+    }
 }

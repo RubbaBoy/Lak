@@ -5,7 +5,7 @@ import com.uddernetworks.lak.sounds.SoundVariant;
 import java.util.Objects;
 
 /**
- * Stores in the `keys` table
+ * Stores in the keys table
  */
 public class DefaultKey implements Key {
 
