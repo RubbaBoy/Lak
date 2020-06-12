@@ -1,14 +1,13 @@
 package com.uddernetworks.lak.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uddernetworks.lak.ResultList;
 import com.uddernetworks.lak.Utility;
 import com.uddernetworks.lak.sounds.FileSound;
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundManager;
 import com.uddernetworks.lak.sounds.SoundVariant;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -25,6 +24,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 //import javax.transaction.Transactional;
 import javax.transaction.Transactional;
+import java.awt.Color;
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -63,6 +63,9 @@ public class SoundControllerTest {
     @Qualifier("variableSoundManager")
     private SoundManager soundManager;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @BeforeAll
     public static void init() {
         headers = new HttpHeaders();
@@ -70,22 +73,25 @@ public class SoundControllerTest {
     }
 
     @Test
-    void getAllSounds() throws JSONException {
+    void getAllSounds() throws JsonProcessingException {
         // Add 5 random sound UUIDs to the database
         var uuids = IntStream.range(0, 5)
                 .mapToObj($ -> UUID.randomUUID())
                 .peek(this::addDatabaseSound)
                 .collect(Collectors.toList());
 
+        var soundType = objectMapper.getTypeFactory()
+                .constructCollectionType(List.class, Sound.class);
+
         // List all sounds from the testing endpoint
-        var result = new JSONArray(get("/list"));
+        var result = objectMapper.<List<Sound>>readValue(get("/list"), soundType);
 
-        assertTrue(result.length() > 0);
+        assertEquals(result.size(), 5);
 
-        for (int i = 0; i < result.length(); i++) {
-            var sound = result.getJSONObject(i);
-            var id = UUID.fromString(sound.getString("id"));
-            var uri = URI.create(sound.getString("uri"));
+        for (var sound : result) {
+            // Ensure the set ID and URI match the set values
+            var id = sound.getId();
+            var uri = sound.getURI();
 
             assertTrue(uuids.contains(id));
             assertEquals(SOUND_URI, uri);
@@ -93,23 +99,46 @@ public class SoundControllerTest {
     }
 
     @Test
-    void getAllSoundVariants() {
+    void getAllSoundVariants() throws JsonProcessingException {
         var soundUUID = UUID.randomUUID();
 
         var sound = addDatabaseSound(soundUUID);
-        var variant = addDatabaseSoundVariant(sound);
 
+        // Add 5 variants to the SoundManager, keeping track of their generated UUIDs
+        var uuids = IntStream.range(0, 5)
+                .mapToObj($ -> sound)
+                .map(this::addDatabaseSoundVariant)
+                .map(SoundVariant::getId)
+                .collect(Collectors.toList());
 
+        var soundVariantType = objectMapper.getTypeFactory()
+                .constructCollectionType(List.class, SoundVariant.class);
+
+        // List all sounds from the testing endpoint
+        var result = objectMapper.<List<SoundVariant>>readValue(get("/listVariants"), soundVariantType);
+
+        System.out.println("result = " + result);
+
+        assertEquals(result.size(), 5);
+
+        for (var soundVariant : result) {
+            // Ensure the variant ID matches, and the sound ID that was set previously does as well
+            var id = soundVariant.getId();
+            var jsonSoundUUID = soundVariant.getSound().getId();
+
+            assertTrue(uuids.contains(id));
+            assertEquals(soundUUID, jsonSoundUUID);
+        }
     }
 
     @Test
-    void addSound() throws JSONException {
+    void addSound() throws JsonProcessingException {
         // Make the request to the testing endpoint
-        var created = new JSONObject(post("addSound", Map.of("uri", SOUND_URI)));
+        var created = objectMapper.readValue(post("addSound", Map.of("uri", SOUND_URI)), Sound.class);
 
         // Get the returned data from the request
-        var soundUUID = UUID.fromString(created.getString("id"));
-        var path = created.getString("uri");
+        var soundUUID = created.getId();
+        var path = created.getURI();
 
         // Select the data that should have been added
         var result = jdbc.query("SELECT * FROM `sounds`", ResultList::new);
@@ -121,19 +150,73 @@ public class SoundControllerTest {
     }
 
     @Test
-    void addVariant() throws JSONException {
+    void addVariant() throws JsonProcessingException {
+        // Add a random sound UUID to the SoundManager manually
         var soundUUID = UUID.randomUUID();
 
-        addDatabaseSound(soundUUID);
+        var sound = addDatabaseSound(soundUUID);
 
-        var json = new JSONObject(post("addVariant", Map.of("name", "something", "soundId", soundUUID)));
-        System.out.println("json = " + json);
-//        var expected = new JSONObject(Map.of("id", soundUUID));
-//        assertEquals(json.getString("id"), expected);
+        // Make a request to the testing endpoint
+        var variant = objectMapper.readValue(post("addVariant", Map.of("soundId", soundUUID)), SoundVariant.class);
+
+        // Get the returned data from the request
+        var fetchedSound = variant.getSound();
+        var jsonUUID = fetchedSound.getId();
+        var jsonURI = fetchedSound.getURI();
+
+        // Ensure it was actually created
+        assertTrue(soundManager.isSoundVariantAdded(variant.getId()));
+
+        // Ensure it matches the data started off with/manually added
+        assertEquals(soundUUID, jsonUUID);
+        assertEquals(sound.getURI(), jsonURI);
     }
 
     @Test
-    void updateVariant() {
+    void updateVariant() throws JsonProcessingException {
+        // Add a random sound UUID to the SoundManager manually
+        var firstSound = UUID.randomUUID();
+        var secondSound = UUID.randomUUID();
+
+        var first = addDatabaseSound(firstSound);
+        var second = addDatabaseSound(secondSound);
+        var variant = addDatabaseSoundVariant(first);
+
+        LOGGER.warn("This variant hash: {}", variant.hashCode());
+
+        // Make a request to the testing endpoint
+        // Only the description and color are being updated, to ensure the sound stays the same
+        var description = "Some desc";
+        var color = Color.RED;
+        var json = objectMapper.readValue(post("updateVariant", Map.of("id", variant.getId(), "description", description, "color", color)), Map.class);
+        System.out.println("json = " + json);
+        assertEquals("ok", json.get("status"));
+        assertEquals(firstSound, variant.getSound().getId());
+        assertEquals(description, variant.getDescription());
+        assertEquals(color, variant.getColor());
+
+        // Send another request to ensure only the sound is being updated
+        var secondJson = objectMapper.readValue(post("updateVariant", Map.of("id", variant.getId(), "soundId", secondSound)), Map.class);
+
+        assertEquals("ok", json.get("status"));
+        assertEquals(secondSound, variant.getSound().getId());
+        assertEquals(description, variant.getDescription());
+        assertEquals(color, variant.getColor());
+
+    }
+
+    @Test
+    void addModulator() {
+
+    }
+
+    @Test
+    void removeModulator() {
+
+    }
+
+    @Test
+    void updateModulator() {
 
     }
 
@@ -147,15 +230,19 @@ public class SoundControllerTest {
         return soundManager.addSoundVariant(sound);
     }
 
-    private String get(String path) throws JSONException {
+    private String get(String path) {
         return restTemplate.getForObject("http://localhost:" + port + "/sounds/" + path, String.class);
     }
 
-    private String post(String path, Map<String, Object> json) throws JSONException {
-        return post(path, new JSONObject(json).toString());
+    private String post(String path, Map<String, Object> json) throws JsonProcessingException {
+        var posting = objectMapper.writeValueAsString(json);
+        System.out.println("posting = " + posting);
+        var res = post(path, posting);
+        System.out.println("res = " + res);
+        return res;
     }
 
-    private String post(String path, String json) throws JSONException {
+    private String post(String path, String json) {
         return restTemplate.postForObject("http://localhost:" + port + "/sounds/" + path, new HttpEntity<>(json, headers), String.class);
     }
 

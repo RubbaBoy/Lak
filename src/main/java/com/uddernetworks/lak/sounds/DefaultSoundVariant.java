@@ -14,11 +14,15 @@ import java.util.UUID;
  */
 public class DefaultSoundVariant implements SoundVariant {
 
-    private UUID id;
+    private final UUID id;
     private Sound sound;
     private String description;
     private Color color;
     private final List<SoundModulation> soundModulators = new ArrayList<>();
+
+    private DefaultSoundVariant() {
+        id = null;
+    }
 
     public DefaultSoundVariant(UUID id, Sound sound) {
         this(id, sound, "", new Color(0));
@@ -93,5 +97,16 @@ public class DefaultSoundVariant implements SoundVariant {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "DefaultSoundVariant{" +
+                "id=" + id +
+                ", sound=" + sound +
+                ", description='" + description + '\'' +
+                ", color=" + color +
+                ", soundModulators=" + soundModulators +
+                '}';
     }
 }

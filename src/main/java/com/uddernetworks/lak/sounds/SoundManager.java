@@ -1,6 +1,7 @@
 package com.uddernetworks.lak.sounds;
 
 import com.uddernetworks.lak.database.SoundRepository;
+import com.uddernetworks.lak.rest.SoundEndpointBodies;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,15 @@ public interface SoundManager {
      * @param sound The {@link Sound} to check
      * @return If the {@link Sound} has been added
      */
-    boolean isSoundAdded(Sound sound);
+    boolean isSoundAdded(UUID soundUUID);
+
+    /**
+     * Checks if the given {@link SoundVariant} has been added via {@link #addSoundVariant(Sound)}.
+     *
+     * @param soundVariant The {@link SoundVariant} to check
+     * @return If the {@link SoundVariant} has been added
+     */
+    boolean isSoundVariantAdded(UUID variantUUID);
 
     /**
      * Gets the {@link Sound} associated with the given UUID, if any.
@@ -120,7 +129,7 @@ public interface SoundManager {
      * Updates a stored {@link SoundVariant} if it doesn't match with the stored copy
      * This method also asynchronously updates the database via {@link SoundRepository#updateVariant(SoundVariant)}.
      *
-     * @param soundVariant The {@link SoundVariant} to update
+     * @param updatingVariant The {@link SoundEndpointBodies.UpdatingVariant} to update
      */
-    void updateVariant(SoundVariant soundVariant);
+    void updateVariant(SoundEndpointBodies.UpdatingVariant updatingVariant);
 }

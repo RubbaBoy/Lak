@@ -1,5 +1,6 @@
 package com.uddernetworks.lak.database;
 
+import com.uddernetworks.lak.Utility;
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundVariant;
 import org.apache.tomcat.util.buf.HexUtils;
@@ -14,6 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import static com.uddernetworks.lak.Utility.getBytesFromUUID;
+import static com.uddernetworks.lak.Utility.hexFromColor;
 import static com.uddernetworks.lak.Utility.readResource;
 import static com.uddernetworks.lak.Utility.readResourceString;
 import static com.uddernetworks.lak.database.DatabaseUtility.preparedExecute;
@@ -50,7 +52,7 @@ public class MySQLSoundRepository implements SoundRepository {
     @Override
     public CompletableFuture<Void> removeSound(UUID soundUUID) {
         return CompletableFuture.runAsync(() ->
-                jdbc.execute("DELETE FROM `sounds` WHERE sound_id = ?;", preparedExecute(stmt ->
+                jdbc.execute("DELETE FROM `sounds` WHERE `sound_id` = ?;", preparedExecute(stmt ->
                         stmt.setBytes(1, getBytesFromUUID(soundUUID)))));
     }
 
@@ -60,7 +62,7 @@ public class MySQLSoundRepository implements SoundRepository {
                 jdbc.execute("INSERT INTO `sound_variants` VALUES (?, ?, ?, ?);", preparedExecute(stmt -> {
                     stmt.setBytes(1, getBytesFromUUID(soundVariant.getId()));
                     stmt.setString(2, soundVariant.getDescription());
-                    stmt.setString(3, Integer.toHexString(soundVariant.getColor().getRGB()));
+                    stmt.setString(3, hexFromColor(soundVariant.getColor()));
                     stmt.setBytes(4, getBytesFromUUID(soundVariant.getSound().getId()));
                 })));
     }
@@ -68,15 +70,15 @@ public class MySQLSoundRepository implements SoundRepository {
     @Override
     public CompletableFuture<Void> removeVariant(UUID variantUUID) {
         return CompletableFuture.runAsync(() ->
-                jdbc.execute("DELETE FROM `sound_variants` WHERE sound_id = ?;", preparedExecute(stmt ->
+                jdbc.execute("DELETE FROM `sound_variants` WHERE `sound_id` = ?;", preparedExecute(stmt ->
                         stmt.setBytes(1, getBytesFromUUID(variantUUID)))));
     }
 
     @Override
     public CompletableFuture<Void> updateVariant(SoundVariant soundVariant) {
-        return CompletableFuture.runAsync(() -> jdbc.execute("UPDATE `sound_variants` SET description = ?, color = ?, sound_id = ? WHERE variant_id = ?;", preparedExecute(stmt -> {
+        return CompletableFuture.runAsync(() -> jdbc.execute("UPDATE `sound_variants` SET `description` = ?, `color` = ?, `sound_id` = ? WHERE `variant_id` = ?;", preparedExecute(stmt -> {
             stmt.setString(1, soundVariant.getDescription());
-            stmt.setString(2, Integer.toString(soundVariant.getColor().getRGB(), 16));
+            stmt.setString(2, hexFromColor(soundVariant.getColor()));
             stmt.setBytes(3, getBytesFromUUID(soundVariant.getSound().getId()));
             stmt.setBytes(4, getBytesFromUUID(soundVariant.getId()));
         })));

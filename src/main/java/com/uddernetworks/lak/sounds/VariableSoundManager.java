@@ -1,6 +1,7 @@
 package com.uddernetworks.lak.sounds;
 
 import com.uddernetworks.lak.database.SoundRepository;
+import com.uddernetworks.lak.rest.SoundEndpointBodies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,8 +43,13 @@ public class VariableSoundManager implements SoundManager {
     }
 
     @Override
-    public boolean isSoundAdded(Sound sound) {
-        return sounds.contains(sound);
+    public boolean isSoundAdded(UUID soundUUID) {
+        return getSound(soundUUID).isPresent();
+    }
+
+    @Override
+    public boolean isSoundVariantAdded(UUID variantUUID) {
+        return getVariant(variantUUID).isPresent();
     }
 
     @Override
@@ -96,11 +102,12 @@ public class VariableSoundManager implements SoundManager {
 
     @Override
     public SoundVariant addSoundVariant(Sound sound) {
-        if (!isSoundAdded(sound)) {
+        if (!isSoundAdded(sound.getId())) {
             addSound(sound);
         }
 
         var variant = new DefaultSoundVariant(UUID.randomUUID(), sound);
+        soundVariants.add(variant);
         waitFuture(synchronous, soundRepository.addVariant(variant));
         return variant;
     }
@@ -118,9 +125,32 @@ public class VariableSoundManager implements SoundManager {
     }
 
     @Override
-    public void updateVariant(SoundVariant soundVariant) {
-        soundVariants.removeIf(variant -> variant.getId().equals(soundVariant.getId()));
-        soundVariants.add(soundVariant);
-        waitFuture(synchronous, soundRepository.updateVariant(soundVariant));
+    public void updateVariant(SoundEndpointBodies.UpdatingVariant updatingVariant) {
+        var storedVariantOptional = soundVariants.stream().filter(variant -> variant.getId().equals(updatingVariant.getId())).findFirst();
+        if (storedVariantOptional.isPresent()) {
+            var storedVariant = storedVariantOptional.get();
+
+            var soundId = updatingVariant.getSoundId();
+            if (soundId != null) {
+                sounds.stream().filter(sound -> sound.getId().equals(updatingVariant.getSoundId()))
+                        .findFirst()
+                        .ifPresent(storedVariant::setSound);
+            }
+
+            var description = updatingVariant.getDescription();
+            if (description != null) {
+                storedVariant.setDescription(description);
+            }
+
+            var color = updatingVariant.getColor();
+            LOGGER.warn("Color: {}", color);
+            if (color != null) {
+                storedVariant.setColor(color);
+            }
+
+            LOGGER.warn("Updating hash: {}", storedVariant.hashCode());
+
+            waitFuture(synchronous, soundRepository.updateVariant(storedVariant));
+        }
     }
 }

@@ -22,4 +22,15 @@ public class StandardSoundModulationFactory implements SoundModulationFactory {
             return null;
         });
     }
+
+    @Override
+    public Optional<SoundModulation> deserializeFromEndpoint(SoundVariant soundVariant, ModulationId modulationId, ModulatorData data) {
+        switch (modulationId) {
+            case VOLUME:
+                return Optional.of(VolumeModulation.fromModularData(soundVariant, data));
+            case PITCH:
+                return Optional.of(PitchModulation.fromEndpointString(soundVariant, data));
+        }
+        return Optional.empty();
+    }
 }

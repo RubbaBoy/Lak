@@ -12,7 +12,7 @@ import java.net.URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JsonTest
-class ColorCombinedSerializerTest {
+class ColorSoundModulationSerializerTest {
 
     @Autowired
     private ObjectMapper objectMapper;

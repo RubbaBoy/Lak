@@ -1,9 +1,26 @@
 package com.uddernetworks.lak.sounds.modulation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Essentially a wrapper for a Map< String, Object > from endpoint data, to ensure type safety.
  */
-public interface ModulatorData {
+public class ModulatorData {
+
+    private final Map<String, Object> data;
+
+    public ModulatorData() {
+        this(new HashMap<>());
+    }
+
+    public ModulatorData(Map<String, Object> data) {
+        this.data = data;
+    }
+
+    public Map<String, Object> getData() {
+        return data;
+    }
 
     /**
      * Gets the value for the given key if it matches the type T.
@@ -12,7 +29,9 @@ public interface ModulatorData {
      * @param <T> The type to get
      * @return The value associated with the given key, or null
      */
-    <T> T get(String key);
+    public <T> T get(String key) {
+        return (T) data.get(key);
+    }
 
     /**
      * Gets the value for the given key if it matches the type T, or a default value.
@@ -22,5 +41,12 @@ public interface ModulatorData {
      * @param <T> The type to get
      * @return The value associated with the given key, or the default
      */
-    <T> T get(String key, T def);
+    public <T> T get(String key, T def) {
+        try {
+            var gotten = data.get(key);
+            return gotten == null ? def : (T) gotten;
+        } catch (Exception ignored) {
+            return def;
+        }
+    }
 }

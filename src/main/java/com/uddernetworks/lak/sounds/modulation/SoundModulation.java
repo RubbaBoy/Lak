@@ -1,10 +1,12 @@
 package com.uddernetworks.lak.sounds.modulation;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.uddernetworks.lak.sounds.SoundVariant;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.Clip;
 import java.nio.ByteBuffer;
+import java.util.Map;
 
 /**
  * An interface to hold modulations to be made to sounds, such as pitch or volume, depending on the implementation.
@@ -33,6 +35,13 @@ public abstract class SoundModulation {
      *             for details on what is acceptable. Invalid/unused keys are disregarded.
      */
     abstract public void updateFromEndpoint(ModulatorData data);
+
+    /**
+     * Gets data to be serialized in the form of a {@link ModulatorData}.
+     *
+     * @return THe {@link ModulatorData} to be serialized
+     */
+    public abstract ModulatorData getSerializable();
 
     /**
      * Modulates the given {@link AudioFormat} with the current modulation settings.

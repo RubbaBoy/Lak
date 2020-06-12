@@ -15,5 +15,13 @@ public interface ModulationManager {
      * @param modulationId The {@link ModulationId} to identify the modulator being constructed
      * @param data         The {@link ModulatorData} containing relevant data to construct the modulator
      */
-    void addOrModifyModulator(SoundVariant soundVariant, ModulationId modulationId, ModulatorData data);
+    SoundModulation addOrModifyModulator(SoundVariant soundVariant, ModulationId modulationId, ModulatorData data);
+
+    /**
+     * Removes a given {@link SoundModulation} by its {@link ModulationId}, if present.
+     *
+     * @param soundVariant The {@link SoundVariant}
+     * @param id The {@link ModulationId} to remove
+     */
+    void removeModulator(SoundVariant soundVariant, ModulationId id);
 }

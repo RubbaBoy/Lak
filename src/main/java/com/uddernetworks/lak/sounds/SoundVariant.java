@@ -1,5 +1,6 @@
 package com.uddernetworks.lak.sounds;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.uddernetworks.lak.sounds.modulation.SoundModulation;
 
 import java.awt.Color;
@@ -10,6 +11,7 @@ import java.util.UUID;
  * A mutable object storing a {@link Sound} and additional data to it, such as name or mutations.
  * This allows for single copies of the raw {@link Sound} while allowing for duplicates or moficiations.
  */
+@JsonDeserialize(as = DefaultSoundVariant.class)
 public interface SoundVariant {
 
     /**
