@@ -1,9 +1,8 @@
 package com.uddernetworks.lak.database;
 
-import com.uddernetworks.lak.Utility;
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundVariant;
-import org.apache.tomcat.util.buf.HexUtils;
+import com.uddernetworks.lak.sounds.modulation.SoundModulation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,9 +15,8 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.uddernetworks.lak.Utility.getBytesFromUUID;
 import static com.uddernetworks.lak.Utility.hexFromColor;
-import static com.uddernetworks.lak.Utility.readResource;
 import static com.uddernetworks.lak.Utility.readResourceString;
-import static com.uddernetworks.lak.database.DatabaseUtility.preparedExecute;
+import static com.uddernetworks.lak.database.DatabaseUtility.executeArgs;
 
 @Component("mySQLSoundRepository")
 public class MySQLSoundRepository implements SoundRepository {
@@ -34,8 +32,6 @@ public class MySQLSoundRepository implements SoundRepository {
     @Override
     @PostConstruct
     public void init() throws IOException {
-//        jdbc.execute("SET DATABASE SQL SYNTAX MYS TRUE");
-
         LOGGER.debug("Creating tables...");
         jdbc.execute(readResourceString("sql/tables.sql"));
     }
@@ -43,49 +39,68 @@ public class MySQLSoundRepository implements SoundRepository {
     @Override
     public CompletableFuture<Void> addSound(Sound sound) {
         return CompletableFuture.runAsync(() ->
-                jdbc.execute("INSERT INTO sounds VALUES (?, ?);", preparedExecute(stmt -> {
-                    stmt.setBytes(1, getBytesFromUUID(sound.getId()));
-                    stmt.setString(2, sound.getURI().toString());
-                })));
+                jdbc.execute("INSERT INTO sounds VALUES (?, ?);", executeArgs(
+                        sound.getId(),
+                        sound.getURI().toString()
+                )));
     }
 
     @Override
     public CompletableFuture<Void> removeSound(UUID soundUUID) {
-        return CompletableFuture.runAsync(() -> {
-            try {
-                jdbc.execute("DELETE FROM sounds WHERE sound_id = ?;", preparedExecute(stmt ->
-                        stmt.setBytes(1, getBytesFromUUID(soundUUID))));
-            } catch (Exception e) {
-                LOGGER.error("Errorooooo", e);
-            }
-        });
+        return CompletableFuture.runAsync(() ->
+                jdbc.execute("DELETE FROM sounds WHERE sound_id = ?;", executeArgs(soundUUID)));
     }
 
     @Override
     public CompletableFuture<Void> addVariant(SoundVariant soundVariant) {
         return CompletableFuture.runAsync(() ->
-                jdbc.execute("INSERT INTO sound_variants VALUES (?, ?, ?, ?);", preparedExecute(stmt -> {
-                    stmt.setBytes(1, getBytesFromUUID(soundVariant.getId()));
-                    stmt.setString(2, soundVariant.getDescription());
-                    stmt.setString(3, hexFromColor(soundVariant.getColor()));
-                    stmt.setBytes(4, getBytesFromUUID(soundVariant.getSound().getId()));
-                })));
+                jdbc.execute("INSERT INTO sound_variants VALUES (?, ?, ?, ?);", executeArgs(
+                        getBytesFromUUID(soundVariant.getId()),
+                        soundVariant.getDescription(),
+                        hexFromColor(soundVariant.getColor()),
+                        soundVariant.getSound().getId()
+                )));
     }
 
     @Override
     public CompletableFuture<Void> removeVariant(UUID variantUUID) {
         return CompletableFuture.runAsync(() ->
-                jdbc.execute("DELETE FROM sound_variants WHERE sound_id = ?;", preparedExecute(stmt ->
-                        stmt.setBytes(1, getBytesFromUUID(variantUUID)))));
+                jdbc.execute("DELETE FROM sound_variants WHERE sound_id = ?;", executeArgs(getBytesFromUUID(variantUUID))));
     }
 
     @Override
     public CompletableFuture<Void> updateVariant(SoundVariant soundVariant) {
-        return CompletableFuture.runAsync(() -> jdbc.execute("UPDATE sound_variants SET description = ?, color = ?, sound_id = ? WHERE variant_id = ?;", preparedExecute(stmt -> {
-            stmt.setString(1, soundVariant.getDescription());
-            stmt.setString(2, hexFromColor(soundVariant.getColor()));
-            stmt.setBytes(3, getBytesFromUUID(soundVariant.getSound().getId()));
-            stmt.setBytes(4, getBytesFromUUID(soundVariant.getId()));
-        })));
+        return CompletableFuture.runAsync(() -> jdbc.execute("UPDATE sound_variants SET description = ?, color = ?, sound_id = ? WHERE variant_id = ?;", executeArgs(
+                soundVariant.getDescription(),
+                hexFromColor(soundVariant.getColor()),
+                soundVariant.getSound().getId(),
+                soundVariant.getId()
+        )));
+    }
+
+    @Override
+    public CompletableFuture<Void> addModulator(SoundModulation soundModulation) {
+        return CompletableFuture.runAsync(() -> jdbc.execute("INSERT INTO modulators VALUES (?, ?, ?);", executeArgs(
+                soundModulation.getId().getId(),
+                soundModulation.serialize(),
+                soundModulation.getSoundVariant().getId()
+        )));
+    }
+
+    @Override
+    public CompletableFuture<Void> removeModulator(SoundModulation soundModulation) {
+        return CompletableFuture.runAsync(() -> jdbc.execute("DELETE FROM modulators WHERE modulation_id = ? AND variant_id = ?", executeArgs(
+                soundModulation.getId().getId(),
+                soundModulation.getSoundVariant().getId()
+        )));
+    }
+
+    @Override
+    public CompletableFuture<Void> updateModulator(SoundModulation soundModulation) {
+        return CompletableFuture.runAsync(() -> jdbc.execute("UPDATE modulators SET value = ? WHERE modulation_id = ? AND variant_id = ?;", executeArgs(
+                soundModulation.serialize(),
+                soundModulation.getId().getId(),
+                soundModulation.getSoundVariant().getId()
+        )));
     }
 }

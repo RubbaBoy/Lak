@@ -2,6 +2,7 @@ package com.uddernetworks.lak.database;
 
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundVariant;
+import com.uddernetworks.lak.sounds.modulation.SoundModulation;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -57,5 +58,29 @@ public interface SoundRepository {
      * @return The asynchronous task
      */
     CompletableFuture<Void> updateVariant(SoundVariant soundVariant);
+
+    /**
+     * Adds a given {@link SoundModulation} to its associated {@link SoundVariant}.
+     *
+     * @param soundModulation The {@link SoundModulation} to add
+     * @return The asynchronous task
+     */
+    CompletableFuture<Void> addModulator(SoundModulation soundModulation);
+
+    /**
+     * Removes a given {@link SoundModulation} from its associated {@link SoundVariant}.
+     *
+     * @param soundModulation The {@link SoundModulation} to remove
+     * @return The asynchronous task
+     */
+    CompletableFuture<Void> removeModulator(SoundModulation soundModulation);
+
+    /**
+     * Updates a given {@link SoundModulation} with its data.
+     *
+     * @param soundModulation The {@link SoundModulation} to update
+     * @return The asynchronous task
+     */
+    CompletableFuture<Void> updateModulator(SoundModulation soundModulation);
 
 }

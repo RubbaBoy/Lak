@@ -4,7 +4,6 @@ import com.uddernetworks.lak.sounds.FileSound;
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundManager;
 import com.uddernetworks.lak.sounds.SoundVariant;
-import com.uddernetworks.lak.sounds.modulation.ModulationId;
 import com.uddernetworks.lak.sounds.modulation.ModulationManager;
 import com.uddernetworks.lak.sounds.modulation.ModulatorData;
 import com.uddernetworks.lak.sounds.modulation.SoundModulation;
@@ -20,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.awt.Color;
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,7 +35,7 @@ public class SoundController {
 
     public SoundController(@Qualifier("variableSoundManager") SoundManager soundManager,
                            @Qualifier("standardSoundModulationFactory") SoundModulationFactory soundModulationFactory,
-                            @Qualifier("defaultModulationManager") ModulationManager modulationManager) {
+                           @Qualifier("defaultModulationManager") ModulationManager modulationManager) {
         this.soundManager = soundManager;
         this.soundModulationFactory = soundModulationFactory;
         this.modulationManager = modulationManager;
@@ -93,6 +90,7 @@ public class SoundController {
     }
 
     @PostMapping(path = "/addModulator", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
     Map<String, Object> addModulator(@RequestBody SoundEndpointBodies.AddRemoveModulator addingModulator) {
         var variantUUID = addingModulator.getVariantUUID();
 
@@ -103,10 +101,12 @@ public class SoundController {
         }
 
         modulationManager.addOrModifyModulator(soundVariantOptional.get(), addingModulator.getId(), new ModulatorData());
+
         return Map.of("status", "ok");
     }
 
     @PostMapping(path = "/removeModulator", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
     Map<String, Object> removeModulator(@RequestBody SoundEndpointBodies.AddRemoveModulator removingModulator) {
         var variantUUID = removingModulator.getVariantUUID();
 
@@ -121,6 +121,7 @@ public class SoundController {
     }
 
     @PostMapping(path = "/updateModulator", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
     SoundModulation updateModulator(@RequestBody SoundEndpointBodies.UpdatingModulator updatingModulator) {
         var variantUUID = updatingModulator.getVariantUUID();
 

@@ -8,6 +8,8 @@ import com.uddernetworks.lak.sounds.FileSound;
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundManager;
 import com.uddernetworks.lak.sounds.SoundVariant;
+import com.uddernetworks.lak.sounds.modulation.ModulationId;
+import com.uddernetworks.lak.sounds.modulation.VolumeModulation;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +34,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.uddernetworks.lak.Utility.args;
+import static com.uddernetworks.lak.Utility.preparedArgs;
+import static com.uddernetworks.lak.database.DatabaseUtility.queryArgs;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -142,7 +146,7 @@ public class SoundControllerTest {
         var soundUUID = created.getId();
         var path = created.getURI();
 
-        var result = jdbc.query("SELECT * FROM sounds WHERE sound_id = ?;", args(Utility.getBytesFromUUID(soundUUID)), ResultList::new);
+        var result = jdbc.query("SELECT * FROM sounds WHERE sound_id = ?;", queryArgs(soundUUID), ResultList::new);
 
 //        // Ensure validity of data
         assertNotNull(result);
@@ -207,23 +211,34 @@ public class SoundControllerTest {
 
     }
 
-//    @Test
-//    void addModulator() {
-//
-//    }
-//
-//    @Test
-//    void removeModulator() {
-//
-//    }
-//
-//    @Test
-//    void updateModulator() {
-//
-//    }
+    @Test
+    void addModulator() throws JsonProcessingException {
+        var soundUUID = UUID.randomUUID();
+
+        var sound = addDatabaseSound(soundUUID);
+        var variant = addDatabaseSoundVariant(sound);
+
+        var json = objectMapper.readValue(post("addModulator", Map.of("variantUUID", variant.getId(), "id", ModulationId.VOLUME.getId())), Map.class);
+
+        System.out.println("json = " + json);
+
+        var modulators = variant.getModulators();
+
+        assertEquals(1, modulators.size());
+        assertEquals("ok", json.get("status"));
+    }
+
+    @Test
+    void removeModulator() {
+
+    }
+
+    @Test
+    void updateModulator() {
+
+    }
 
     private Sound addDatabaseSound(UUID soundUUID) {
-        System.out.println("addDatabaseSound soundUUID = " + soundUUID);
         var sound = new FileSound(soundUUID, SOUND_URI);
         soundManager.addSound(sound);
         return sound;

@@ -1,5 +1,9 @@
 package com.uddernetworks.lak;
 
+import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
+import org.springframework.jdbc.core.PreparedStatementSetter;
+import org.springframework.lang.Nullable;
+
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -11,16 +15,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Utility {
-
-    /**
-     * Returns an object array from varargs
-     *
-     * @param args The args
-     * @return The args
-     */
-    public static <T> T[] args(T... args) {
-        return args;
-    }
 
     /**
      * Clamps a value between two other inclusive values.
