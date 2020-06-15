@@ -1,6 +1,5 @@
-package com.uddernetworks.lak.rest.errors;
+package com.uddernetworks.lak.rest.exceptions;
 
-import com.uddernetworks.lak.rest.EndpointException;
 import com.uddernetworks.lak.sounds.modulation.ModulatorData;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

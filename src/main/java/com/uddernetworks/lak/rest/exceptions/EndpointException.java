@@ -1,4 +1,4 @@
-package com.uddernetworks.lak.rest;
+package com.uddernetworks.lak.rest.exceptions;
 
 import org.springframework.http.HttpStatus;
 

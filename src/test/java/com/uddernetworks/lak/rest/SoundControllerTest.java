@@ -10,6 +10,7 @@ import com.uddernetworks.lak.sounds.SoundManager;
 import com.uddernetworks.lak.sounds.SoundVariant;
 import com.uddernetworks.lak.sounds.modulation.ModulationId;
 import com.uddernetworks.lak.sounds.modulation.VolumeModulation;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,15 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.interceptor.TransactionInterceptor;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.transaction.Transactional;
 import java.awt.Color;
 import java.net.URI;
 import java.util.List;
@@ -40,8 +49,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SoundControllerTest {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SoundControllerTest.class);
 
     private static final URI SOUND_URI = URI.create("/path/here.mp3");
 
@@ -69,13 +76,12 @@ public class SoundControllerTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
     }
 
-    @BeforeEach
+    @AfterEach
     public void resetSounds() {
-        // Removes all sounds and variants. Paired with this class being transactional, this ensures a clean
-        // SoundManager and database to work with each test in this class.
-        LOGGER.warn("Before each!");
+        // Resets the database along with sounds/variants so each test is clean.
         soundManager.getAllSounds().clear();
         soundManager.getAllSoundVariants().clear();
+        jdbc.execute("TRUNCATE SCHEMA PUBLIC AND COMMIT;");
     }
 
     @Test
@@ -92,7 +98,7 @@ public class SoundControllerTest {
         // List all sounds from the testing endpoint
         var result = objectMapper.<List<Sound>>readValue(get("/list"), soundType);
 
-        assertEquals(result.size(), 5);
+        assertEquals(5, result.size());
 
         for (var sound : result) {
             // Ensure the set ID and URI match the set values
@@ -144,7 +150,7 @@ public class SoundControllerTest {
         var soundUUID = created.getId();
         var path = created.getURI();
 
-        var result = jdbc.query("SELECT * FROM sounds WHERE sound_id = ?;", queryArgs(soundUUID), ResultList::new);
+        var result = jdbc.query("SELECT * FROM `sounds` WHERE `sound_id` = ?;", queryArgs((Object) Utility.getBytesFromUUID(soundUUID)), ResultList::new);
 
         // Ensure validity of data
         assertNotNull(result);
@@ -186,8 +192,6 @@ public class SoundControllerTest {
         var first = addDatabaseSound(firstSound);
         var second = addDatabaseSound(secondSound);
         var variant = addDatabaseSoundVariant(first);
-
-        LOGGER.warn("This variant hash: {}", variant.hashCode());
 
         // Make a request to the testing endpoint
         // Only the description and color are being updated, to ensure the sound stays the same

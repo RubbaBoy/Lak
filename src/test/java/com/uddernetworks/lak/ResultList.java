@@ -1,11 +1,8 @@
 package com.uddernetworks.lak;
 
-import org.springframework.jdbc.core.ResultSetExtractor;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +10,7 @@ import java.util.Map;
 
 public class ResultList {
 
+    private final int size;
     private final List<String> columns;
     private final Iterator<Map<String, Object>> iterator;
     private Map<String, Object> currData;
@@ -36,7 +34,12 @@ public class ResultList {
             data.add(map);
         }
 
-        this.iterator = data.iterator();
+        size = data.size();
+        iterator = data.iterator();
+    }
+
+    public int size() {
+        return size;
     }
 
     public boolean hasNext() {

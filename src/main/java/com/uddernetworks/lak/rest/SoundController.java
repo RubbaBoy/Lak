@@ -1,6 +1,8 @@
 package com.uddernetworks.lak.rest;
 
-import com.uddernetworks.lak.rest.errors.ModulatorUpdateException;
+import com.uddernetworks.lak.rest.exceptions.ModulatorUpdateException;
+import com.uddernetworks.lak.rest.exceptions.SoundNotFoundException;
+import com.uddernetworks.lak.rest.exceptions.SoundVariantNotFoundException;
 import com.uddernetworks.lak.sounds.FileSound;
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundManager;
@@ -31,21 +33,17 @@ public class SoundController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SoundController.class);
 
     private final SoundManager soundManager;
-    private final SoundModulationFactory soundModulationFactory;
     private final ModulationManager modulationManager;
 
     public SoundController(@Qualifier("variableSoundManager") SoundManager soundManager,
-                           @Qualifier("standardSoundModulationFactory") SoundModulationFactory soundModulationFactory,
                            @Qualifier("defaultModulationManager") ModulationManager modulationManager) {
         this.soundManager = soundManager;
-        this.soundModulationFactory = soundModulationFactory;
         this.modulationManager = modulationManager;
     }
 
     @GetMapping(path = "/list")
     public @ResponseBody
     Iterable<Sound> getAllSound() {
-        LOGGER.info("LISTINGGGGGG");
         return soundManager.getAllSounds();
     }
 
@@ -58,9 +56,7 @@ public class SoundController {
     @PostMapping(path = "/addSound", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public @ResponseBody
     Sound addSound(@RequestBody SoundEndpointBodies.AddingSound addingSound) {
-        var uuid = UUID.randomUUID();
-        LOGGER.warn("Adding sound: {}", uuid);
-        var sound = new FileSound(uuid, URI.create(addingSound.getURI()));
+        var sound = new FileSound(UUID.randomUUID(), URI.create(addingSound.getURI()));
         soundManager.addSound(sound);
         return sound;
     }
@@ -76,8 +72,6 @@ public class SoundController {
     @PostMapping(path = "/updateVariant", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public @ResponseBody
     Map<String, Object> updateVariant(@RequestBody SoundEndpointBodies.UpdatingVariant updatingVariant) {
-        LOGGER.warn("Request: {}", updatingVariant);
-
         if (!soundManager.isSoundVariantAdded(updatingVariant.getId())) {
             throw new SoundVariantNotFoundException(updatingVariant.getId());
         }
@@ -87,6 +81,7 @@ public class SoundController {
         }
 
         soundManager.updateVariant(updatingVariant);
+
         return Map.of("status", "ok");
     }
 
@@ -118,6 +113,7 @@ public class SoundController {
         }
 
         modulationManager.removeModulator(soundVariantOptional.get(), removingModulator.getId());
+
         return Map.of("status", "ok");
     }
 

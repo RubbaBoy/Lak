@@ -1,24 +1,25 @@
 package com.uddernetworks.lak.database;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.relational.core.sql.SQL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.PreparedStatementSetter;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+import static com.uddernetworks.lak.Utility.getBytesFromUUID;
 
 @Component
 public class DatabaseUtility {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseUtility.class);
 
     @FunctionalInterface
     public interface SQLConsumer {
@@ -55,8 +56,8 @@ public class DatabaseUtility {
      * @param args The args to set in the prepared statement
      * @return The {@link PreparedStatementSetter}
      */
-    public static <T> PreparedStatementSetter queryArgs(T... args) {
-        return new ArgumentPreparedStatementSetter(args);
+    public static PreparedStatementSetter queryArgs(Object... args) {
+        return new ArgumentPreparedStatementSetter(transformArgs(args));
     }
 
     /**
@@ -66,7 +67,16 @@ public class DatabaseUtility {
      * @param args The args to set in the prepared statement
      * @return The {@link ArgumentPreparedStatementCallback}
      */
-    public static <T> ArgumentPreparedStatementCallback executeArgs(T... args) {
-        return new ArgumentPreparedStatementCallback(args);
+    public static ArgumentPreparedStatementCallback executeArgs(Object... args) {
+        return new ArgumentPreparedStatementCallback(queryArgs(args));
+    }
+
+    private static Object[] transformArgs(Object[] args) {
+        return Arrays.stream(args).map(arg -> {
+            if (arg instanceof UUID) {
+                return getBytesFromUUID((UUID) arg);
+            }
+            return arg;
+        }).toArray(Object[]::new);
     }
 }

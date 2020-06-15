@@ -109,6 +109,15 @@ public class SoundEndpointBodies {
         public ModulatorData getModulatorData() {
             return modulatorData;
         }
+
+        @Override
+        public String toString() {
+            return "UpdatingModulator{" +
+                    "variantUUID=" + variantUUID +
+                    ", id=" + id +
+                    ", modulatorData=" + modulatorData +
+                    '}';
+        }
     }
 
     public static class AddRemoveModulator {
@@ -126,6 +135,14 @@ public class SoundEndpointBodies {
 
         public ModulationId getId() {
             return id;
+        }
+
+        @Override
+        public String toString() {
+            return "AddRemoveModulator{" +
+                    "variantUUID=" + variantUUID +
+                    ", id=" + id +
+                    '}';
         }
     }
 }

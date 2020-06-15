@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "lak.database.synchronous",
+      "type": "java.lang.Boolean",
+      "description": "If database operations should be synchronous, useful for testing."
+    }
+  ]
+}

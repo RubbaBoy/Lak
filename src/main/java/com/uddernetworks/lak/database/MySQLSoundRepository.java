@@ -1,5 +1,6 @@
 package com.uddernetworks.lak.database;
 
+import com.uddernetworks.lak.Utility;
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundVariant;
 import com.uddernetworks.lak.sounds.modulation.SoundModulation;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -32,15 +34,18 @@ public class MySQLSoundRepository implements SoundRepository {
     @Override
     @PostConstruct
     public void init() throws IOException {
+        jdbc.execute("SET DATABASE SQL SYNTAX MYS TRUE");
+
         LOGGER.debug("Creating tables...");
         jdbc.execute(readResourceString("sql/tables.sql"));
     }
 
     @Override
+    @Transactional
     public CompletableFuture<Void> addSound(Sound sound) {
         return CompletableFuture.runAsync(() ->
-                jdbc.execute("INSERT INTO sounds VALUES (?, ?);", executeArgs(
-                        sound.getId(),
+                jdbc.execute("INSERT INTO `sounds` VALUES (?, ?);", executeArgs(
+                        Utility.getBytesFromUUID(sound.getId()),
                         sound.getURI().toString()
                 )));
     }
@@ -48,13 +53,13 @@ public class MySQLSoundRepository implements SoundRepository {
     @Override
     public CompletableFuture<Void> removeSound(UUID soundUUID) {
         return CompletableFuture.runAsync(() ->
-                jdbc.execute("DELETE FROM sounds WHERE sound_id = ?;", executeArgs(soundUUID)));
+                jdbc.execute("DELETE FROM `sounds` WHERE `sound_id` = ?;", executeArgs(soundUUID)));
     }
 
     @Override
     public CompletableFuture<Void> addVariant(SoundVariant soundVariant) {
         return CompletableFuture.runAsync(() ->
-                jdbc.execute("INSERT INTO sound_variants VALUES (?, ?, ?, ?);", executeArgs(
+                jdbc.execute("INSERT INTO `sound_variants` VALUES (?, ?, ?, ?);", executeArgs(
                         getBytesFromUUID(soundVariant.getId()),
                         soundVariant.getDescription(),
                         hexFromColor(soundVariant.getColor()),
@@ -65,12 +70,12 @@ public class MySQLSoundRepository implements SoundRepository {
     @Override
     public CompletableFuture<Void> removeVariant(UUID variantUUID) {
         return CompletableFuture.runAsync(() ->
-                jdbc.execute("DELETE FROM sound_variants WHERE sound_id = ?;", executeArgs(getBytesFromUUID(variantUUID))));
+                jdbc.execute("DELETE FROM sound_variants WHERE `sound_id` = ?;", executeArgs(getBytesFromUUID(variantUUID))));
     }
 
     @Override
     public CompletableFuture<Void> updateVariant(SoundVariant soundVariant) {
-        return CompletableFuture.runAsync(() -> jdbc.execute("UPDATE sound_variants SET description = ?, color = ?, sound_id = ? WHERE variant_id = ?;", executeArgs(
+        return CompletableFuture.runAsync(() -> jdbc.execute("UPDATE `sound_variants` SET `description` = ?, `color` = ?, `sound_id` = ? WHERE `variant_id` = ?;", executeArgs(
                 soundVariant.getDescription(),
                 hexFromColor(soundVariant.getColor()),
                 soundVariant.getSound().getId(),
@@ -80,7 +85,7 @@ public class MySQLSoundRepository implements SoundRepository {
 
     @Override
     public CompletableFuture<Void> addModulator(SoundModulation soundModulation) {
-        return CompletableFuture.runAsync(() -> jdbc.execute("INSERT INTO modulators VALUES (?, ?, ?);", executeArgs(
+        return CompletableFuture.runAsync(() -> jdbc.execute("INSERT INTO `modulators` VALUES (?, ?, ?);", executeArgs(
                 soundModulation.getId().getId(),
                 soundModulation.serialize(),
                 soundModulation.getSoundVariant().getId()
@@ -89,7 +94,7 @@ public class MySQLSoundRepository implements SoundRepository {
 
     @Override
     public CompletableFuture<Void> removeModulator(SoundModulation soundModulation) {
-        return CompletableFuture.runAsync(() -> jdbc.execute("DELETE FROM modulators WHERE modulation_id = ? AND variant_id = ?", executeArgs(
+        return CompletableFuture.runAsync(() -> jdbc.execute("DELETE FROM `modulators` WHERE `modulation_id` = ? AND `variant_id` = ?", executeArgs(
                 soundModulation.getId().getId(),
                 soundModulation.getSoundVariant().getId()
         )));
@@ -97,7 +102,7 @@ public class MySQLSoundRepository implements SoundRepository {
 
     @Override
     public CompletableFuture<Void> updateModulator(SoundModulation soundModulation) {
-        return CompletableFuture.runAsync(() -> jdbc.execute("UPDATE modulators SET value = ? WHERE modulation_id = ? AND variant_id = ?;", executeArgs(
+        return CompletableFuture.runAsync(() -> jdbc.execute("UPDATE `modulators` SET `value` = ? WHERE `modulation_id` = ? AND `variant_id` = ?;", executeArgs(
                 soundModulation.serialize(),
                 soundModulation.getId().getId(),
                 soundModulation.getSoundVariant().getId()

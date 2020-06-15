@@ -143,12 +143,9 @@ public class VariableSoundManager implements SoundManager {
             }
 
             var color = updatingVariant.getColor();
-            LOGGER.warn("Color: {}", color);
             if (color != null) {
                 storedVariant.setColor(color);
             }
-
-            LOGGER.warn("Updating hash: {}", storedVariant.hashCode());
 
             waitFuture(synchronous, soundRepository.updateVariant(storedVariant));
         }
