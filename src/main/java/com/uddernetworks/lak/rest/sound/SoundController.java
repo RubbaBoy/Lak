@@ -1,4 +1,4 @@
-package com.uddernetworks.lak.rest;
+package com.uddernetworks.lak.rest.sound;
 
 import com.uddernetworks.lak.rest.exceptions.ModulatorUpdateException;
 import com.uddernetworks.lak.rest.exceptions.SoundNotFoundException;
@@ -10,7 +10,6 @@ import com.uddernetworks.lak.sounds.SoundVariant;
 import com.uddernetworks.lak.sounds.modulation.ModulationManager;
 import com.uddernetworks.lak.sounds.modulation.ModulatorData;
 import com.uddernetworks.lak.sounds.modulation.SoundModulation;
-import com.uddernetworks.lak.sounds.modulation.SoundModulationFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;

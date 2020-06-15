@@ -1,4 +1,4 @@
-package com.uddernetworks.lak.rest;
+package com.uddernetworks.lak.rest.sound;
 
 import com.uddernetworks.lak.sounds.modulation.ModulationId;
 import com.uddernetworks.lak.sounds.modulation.ModulatorData;

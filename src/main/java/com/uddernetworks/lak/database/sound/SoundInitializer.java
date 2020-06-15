@@ -1,7 +1,6 @@
-package com.uddernetworks.lak.database;
+package com.uddernetworks.lak.database.sound;
 
-import com.uddernetworks.lak.keys.DefaultKey;
-import com.uddernetworks.lak.keys.KeyEnum;
+import com.uddernetworks.lak.database.RepositoryInitializer;
 import com.uddernetworks.lak.sounds.DefaultSoundVariant;
 import com.uddernetworks.lak.sounds.FileSound;
 import com.uddernetworks.lak.sounds.SoundManager;
@@ -15,13 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
-import java.nio.file.Path;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,8 +25,8 @@ import static com.uddernetworks.lak.Utility.getUUIDFromBytes;
  * Initializes the sound data for the database. This is not done in {@link SoundRepository} as to prevent cyclical
  * dependencies with {@link SoundManager}, and to keep that class specifically for accessing and updating tables.
  */
-@Component
-public class SoundInitializer {
+@Component("soundInitializer")
+public class SoundInitializer implements RepositoryInitializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SoundInitializer.class);
 
@@ -49,7 +42,7 @@ public class SoundInitializer {
         this.soundModulationFactory = soundModulationFactory;
     }
 
-    @PostConstruct
+    @Override
     public void init() {
         LOGGER.debug("Initializing sounds");
 

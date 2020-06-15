@@ -1,4 +1,4 @@
-package com.uddernetworks.lak.database;
+package com.uddernetworks.lak.database.sound;
 
 import com.uddernetworks.lak.Utility;
 import com.uddernetworks.lak.sounds.Sound;
@@ -20,7 +20,7 @@ import static com.uddernetworks.lak.Utility.hexFromColor;
 import static com.uddernetworks.lak.Utility.readResourceString;
 import static com.uddernetworks.lak.database.DatabaseUtility.executeArgs;
 
-@Component("mySQLSoundRepository")
+@Component("sqlSoundRepository")
 public class MySQLSoundRepository implements SoundRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MySQLSoundRepository.class);
@@ -29,15 +29,6 @@ public class MySQLSoundRepository implements SoundRepository {
 
     public MySQLSoundRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
-    }
-
-    @Override
-    @PostConstruct
-    public void init() throws IOException {
-        jdbc.execute("SET DATABASE SQL SYNTAX MYS TRUE");
-
-        LOGGER.debug("Creating tables...");
-        jdbc.execute(readResourceString("sql/tables.sql"));
     }
 
     @Override

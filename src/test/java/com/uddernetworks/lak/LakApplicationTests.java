@@ -1,6 +1,6 @@
 package com.uddernetworks.lak;
 
-import com.uddernetworks.lak.rest.SoundController;
+import com.uddernetworks.lak.rest.sound.SoundController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

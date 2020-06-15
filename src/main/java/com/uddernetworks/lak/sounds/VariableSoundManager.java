@@ -1,7 +1,7 @@
 package com.uddernetworks.lak.sounds;
 
-import com.uddernetworks.lak.database.SoundRepository;
-import com.uddernetworks.lak.rest.SoundEndpointBodies;
+import com.uddernetworks.lak.database.sound.SoundRepository;
+import com.uddernetworks.lak.rest.sound.SoundEndpointBodies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 import static com.uddernetworks.lak.database.DatabaseUtility.waitFuture;
 
@@ -28,7 +27,7 @@ public class VariableSoundManager implements SoundManager {
     private final List<Sound> sounds = new ArrayList<>();
     private final List<SoundVariant> soundVariants = new ArrayList<>();
 
-    public VariableSoundManager(@Qualifier("mySQLSoundRepository") SoundRepository soundRepository) {
+    public VariableSoundManager(@Qualifier("sqlSoundRepository") SoundRepository soundRepository) {
         this.soundRepository = soundRepository;
     }
 

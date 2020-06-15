@@ -1,5 +1,7 @@
 package com.uddernetworks.lak.keys;
 
+import com.uddernetworks.lak.rest.key.KeyEndpointBodies;
+
 import java.util.List;
 
 /**
@@ -25,7 +27,7 @@ public interface KeyManager {
     /**
      * Updates the internal storage of {@link Key}s for the given {@link Key}.
      *
-     * @param key The {@link Key} to update
+     * @param updatingKey The {@link Key} to update
      */
-    void updateKey(Key key);
+    void updateKey(KeyEndpointBodies.UpdatingKey updatingKey);
 }

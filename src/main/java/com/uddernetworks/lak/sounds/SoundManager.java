@@ -1,7 +1,7 @@
 package com.uddernetworks.lak.sounds;
 
-import com.uddernetworks.lak.database.SoundRepository;
-import com.uddernetworks.lak.rest.SoundEndpointBodies;
+import com.uddernetworks.lak.database.sound.SoundRepository;
+import com.uddernetworks.lak.rest.sound.SoundEndpointBodies;
 
 import java.util.List;
 import java.util.Optional;
