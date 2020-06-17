@@ -20,10 +20,11 @@ public class SQLKeyRepository implements KeyRepository {
     @Override
     public CompletableFuture<Void> updateKey(Key key) {
         return CompletableFuture.runAsync(() ->
-                jdbc.execute("UPDATE `keys` SET `variant_id` = ?, `loop` = ? WHERE `key` = ?;", executeArgs(
+                jdbc.execute("UPDATE `keys` SET `variant_id` = ?, `loop` = ? WHERE `key` = ? AND `shift` = ?;", executeArgs(
                         key.getSound().getId(),
                         key.isLoop(),
-                        key.getKey().getId()
+                        key.getKey().getId(),
+                        key.getKey().isShift()
                 )));
     }
 }

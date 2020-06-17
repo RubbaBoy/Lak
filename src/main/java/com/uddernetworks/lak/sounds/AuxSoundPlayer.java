@@ -24,16 +24,13 @@ public class AuxSoundPlayer implements SoundPlayer, LineListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuxSoundPlayer.class);
 
     private final KeyManager keyManager;
-    private final KeyboardInterceptor keyboardInterceptor;
     private final SoundManager soundManager;
 
     private boolean playCompleted;
 
     public AuxSoundPlayer(@Qualifier("defaultKeyManager") KeyManager keyManager,
-                          @Qualifier("soundKeyboardInterceptor") KeyboardInterceptor keyboardInterceptor,
                           @Qualifier("variableSoundManager") SoundManager soundManager) {
         this.keyManager = keyManager;
-        this.keyboardInterceptor = keyboardInterceptor;
         this.soundManager = soundManager;
     }
 

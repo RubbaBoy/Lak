@@ -1,9 +1,10 @@
 CREATE TABLE IF NOT EXISTS `keys` (
     `key`        int        NOT NULL,
+    `shift`      bit        NOT NULL,
     `variant_id` binary(16) NULL,
     `loop`       bit        NOT NULL,
 
-    PRIMARY KEY (`key`)
+    PRIMARY KEY (`key`, `shift`)
 );
 
 CREATE TABLE IF NOT EXISTS `sounds` (

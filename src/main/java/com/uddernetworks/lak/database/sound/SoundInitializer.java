@@ -1,5 +1,6 @@
 package com.uddernetworks.lak.database.sound;
 
+import com.uddernetworks.lak.database.DatabaseUtility;
 import com.uddernetworks.lak.database.RepositoryInitializer;
 import com.uddernetworks.lak.sounds.DefaultSoundVariant;
 import com.uddernetworks.lak.sounds.FileSound;
@@ -11,11 +12,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.net.URI;
+import java.nio.file.Paths;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.uddernetworks.lak.Utility.colorFromHex;
@@ -67,5 +74,16 @@ public class SoundInitializer implements RepositoryInitializer {
                 .flatMap(Optional::stream)
                 .collect(Collectors.groupingBy(SoundModulation::getSoundVariant))
                 .forEach(SoundVariant::setModulators);
+
+        var soundSize = soundManager.getAllSounds().size();
+        if (soundSize == 0) {
+            LOGGER.debug("No sounds loaded, adding a default one");
+            var sound = new FileSound(UUID.randomUUID(), Paths.get("E:/lak/sounds/elliot.wav").toUri());
+            soundManager.addSound(sound);
+            var variant = soundManager.addSoundVariant(sound);
+            LOGGER.debug("Created sound {} and variant {}", sound.getId(), variant.getId());
+        } else {
+            LOGGER.debug("Loaded {} sound(s)", soundSize);
+        }
     }
 }

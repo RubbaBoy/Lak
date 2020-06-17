@@ -40,6 +40,8 @@ public class SQLInitializer {
         LOGGER.debug("Creating tables...");
         jdbc.execute(readResourceString("sql/tables.sql"));
 
+//        jdbc.execute("TRUNCATE SCHEMA PUBLIC AND COMMIT;");
+
         LOGGER.debug("Initializing sounds...");
         soundInitializer.init();
 

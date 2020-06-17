@@ -3,6 +3,8 @@ package com.uddernetworks.lak.keys;
 import com.uddernetworks.lak.database.key.KeyRepository;
 import com.uddernetworks.lak.rest.key.KeyEndpointBodies;
 import com.uddernetworks.lak.sounds.SoundManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,8 @@ import static com.uddernetworks.lak.database.DatabaseUtility.waitFuture;
 
 @Component("defaultKeyManager")
 public class DefaultKeyManager implements KeyManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultKeyManager.class);
 
     @Value("${lak.database.synchronous}")
     private boolean synchronous;
@@ -38,6 +42,16 @@ public class DefaultKeyManager implements KeyManager {
         return keys.stream().filter(key -> key.getKey() == keyEnum).findFirst().orElseGet(() -> {
             throw new IllegalStateException("No key is defined for enum '" + keyEnum.name() + "' ID #" + keyEnum.getId());
         });
+    }
+
+    @Override
+    public void setKeys(List<Key> keys) {
+        if (!this.keys.isEmpty()) {
+            LOGGER.warn("Tried to invoke DefaultKeyManager#setKeys(List<Key>) while key list is populated");
+            return;
+        }
+
+        this.keys.addAll(keys);
     }
 
     @Override

@@ -16,6 +16,7 @@ public class USBKeyboardOutput implements KeyboardOutput {
     @Override
     public void outputKey(KeyEnum keyEnum) {
         LOGGER.warn("TODO: Output {}", keyEnum);
+        // TODO: Add output for Raspberry Pi
     }
 
 }

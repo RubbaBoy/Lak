@@ -71,7 +71,7 @@ public class DatabaseUtility {
         return new ArgumentPreparedStatementCallback(queryArgs(args));
     }
 
-    private static Object[] transformArgs(Object[] args) {
+    public static Object[] transformArgs(Object... args) {
         return Arrays.stream(args).map(arg -> {
             if (arg instanceof UUID) {
                 return getBytesFromUUID((UUID) arg);

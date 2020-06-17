@@ -63,7 +63,7 @@ public class USBKeyboardInput implements KeyboardInput {
                                 continue;
                             }
 
-                            var keyOptional = KeyEnum.fromLinuxCode(code);
+                            var keyOptional = KeyEnum.fromLinuxCode(code, false);
                             if (keyOptional.isEmpty()) {
                                 continue;
                             }
@@ -75,14 +75,13 @@ public class USBKeyboardInput implements KeyboardInput {
 
                             System.out.println(sec + " Key: " + key + " " + action.name());
                         }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    } catch (InterruptedException ignored) {
                     } finally {
                         lock.unlock();
                     }
                 }
             } catch (IOException e) {
-                LOGGER.error("An error occurred while reading the file");
+                LOGGER.error("An error occurred while reading the file", e);
             }
         });
     }
