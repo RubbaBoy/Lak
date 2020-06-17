@@ -1,7 +1,5 @@
 package com.uddernetworks.lak.rest.key;
 
-import com.uddernetworks.lak.keys.KeyEnum;
-
 import java.util.UUID;
 
 public class KeyEndpointBodies {

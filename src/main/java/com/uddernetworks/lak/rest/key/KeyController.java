@@ -34,7 +34,6 @@ public class KeyController {
     @PostMapping(path = "/update", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public @ResponseBody
     Map<String, Object> updateKey(@RequestBody KeyEndpointBodies.UpdatingKey updatingKey) {
-
         if (KeyEnum.fromId(updatingKey.getKey()).isEmpty()) {
             throw new KeyNotFoundException(updatingKey.getKey());
         }

@@ -3,14 +3,11 @@ package com.uddernetworks.lak.sounds;
 import com.uddernetworks.lak.keys.KeyEnum;
 import com.uddernetworks.lak.keys.KeyManager;
 import com.uddernetworks.lak.keys.KeyboardInterceptor;
-import com.uddernetworks.lak.sounds.modulation.SoundModulation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
@@ -20,8 +17,8 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.charset.MalformedInputException;
 
+@Component("auxSoundPlayer")
 public class AuxSoundPlayer implements SoundPlayer, LineListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuxSoundPlayer.class);
@@ -32,8 +29,8 @@ public class AuxSoundPlayer implements SoundPlayer, LineListener {
 
     private boolean playCompleted;
 
-    public AuxSoundPlayer(KeyManager keyManager,
-                          KeyboardInterceptor keyboardInterceptor,
+    public AuxSoundPlayer(@Qualifier("defaultKeyManager") KeyManager keyManager,
+                          @Qualifier("soundKeyboardInterceptor") KeyboardInterceptor keyboardInterceptor,
                           @Qualifier("variableSoundManager") SoundManager soundManager) {
         this.keyManager = keyManager;
         this.keyboardInterceptor = keyboardInterceptor;
