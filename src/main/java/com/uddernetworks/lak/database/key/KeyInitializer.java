@@ -1,7 +1,5 @@
 package com.uddernetworks.lak.database.key;
 
-import com.uddernetworks.lak.Utility;
-import com.uddernetworks.lak.database.DatabaseUtility;
 import com.uddernetworks.lak.database.RepositoryInitializer;
 import com.uddernetworks.lak.keys.DefaultKey;
 import com.uddernetworks.lak.keys.KeyEnum;
@@ -10,18 +8,13 @@ import com.uddernetworks.lak.sounds.SoundManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static com.uddernetworks.lak.Utility.getUUIDFromBytes;
-import static com.uddernetworks.lak.database.DatabaseUtility.args;
-import static com.uddernetworks.lak.database.DatabaseUtility.executeArgs;
 import static com.uddernetworks.lak.database.DatabaseUtility.transformArgs;
 
 /**

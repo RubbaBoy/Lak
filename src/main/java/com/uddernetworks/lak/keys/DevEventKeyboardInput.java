@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,20 +21,21 @@ import java.util.concurrent.locks.ReentrantLock;
  * A linux-only key detector straight from /dev/input/event0
  * This must be ran with elevated permissions.
  */
-@Component("usbKeyboardInput")
-public class USBKeyboardInput implements KeyboardInput {
+@Component("devEventKeyboardInput")
+public class DevEventKeyboardInput implements KeyboardInput {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(USBKeyboardInput.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DevEventKeyboardInput.class);
 
     private final KeyboardInterceptor keyboardInterceptor;
 
     private final ReentrantLock lock = new ReentrantLock();
 
-    public USBKeyboardInput(@Qualifier("soundKeyboardInterceptor") KeyboardInterceptor keyboardInterceptor) {
+    public DevEventKeyboardInput(@Qualifier("soundKeyboardInterceptor") KeyboardInterceptor keyboardInterceptor) {
         this.keyboardInterceptor = keyboardInterceptor;
     }
 
     @Override
+    @PostConstruct
     public void init() {
         lock.lock();
         CompletableFuture.runAsync(() -> {
@@ -73,7 +75,7 @@ public class USBKeyboardInput implements KeyboardInput {
 
                             keyboardInterceptor.receiveKey(key);
 
-                            System.out.println(sec + " Key: " + key + " " + action.name());
+                            LOGGER.debug("{} Key: {} {}", sec, key, action.name());
                         }
                     } catch (InterruptedException ignored) {
                     } finally {

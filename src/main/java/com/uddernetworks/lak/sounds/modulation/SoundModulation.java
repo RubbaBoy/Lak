@@ -2,6 +2,8 @@ package com.uddernetworks.lak.sounds.modulation;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.uddernetworks.lak.sounds.SoundVariant;
+import org.urish.openal.ALException;
+import org.urish.openal.Source;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.Clip;
@@ -44,13 +46,11 @@ public abstract class SoundModulation {
     public abstract ModulatorData getSerializable();
 
     /**
-     * Modulates the given {@link AudioFormat} with the current modulation settings.
+     * Modulates the given {@link Source} with the current modulation settings.
      *
-     * @param audioFormat The {@link AudioFormat} to modulate
-     * @param clip The {@link Clip} to be used if the implementation requires it
-     * @return The modulated {@link AudioFormat}. If null, the {@link AudioFormat} is assumed to be unmodified
+     * @param source The {@link Source} to modulate
      */
-    abstract public AudioFormat modulateSound(AudioFormat audioFormat, Clip clip);
+    abstract public void modulateSound(Source source) throws ALException;
 
     /**
      * Serialize the modulation so it can be inserted into the database.

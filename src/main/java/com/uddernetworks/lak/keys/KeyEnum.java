@@ -7,6 +7,7 @@ import java.util.Optional;
  * Key data comes from page 53 (Table 12) of the USB HID Usage Tables PDF
  */
 public enum KeyEnum {
+    RESERVED(0, 0),
     KEY_A(4, 30),
     KEY_A_SHIFT(4, 30, true),
     KEY_B(5, 48),
@@ -251,5 +252,10 @@ public enum KeyEnum {
 
     public static Optional<KeyEnum> fromLinuxCode(int linuxCode, boolean shift) {
         return Arrays.stream(values()).filter(key -> key.shift == shift && key.linuxCode == linuxCode).findFirst();
+    }
+
+    @Override
+    public String toString() {
+        return "KeyEnum(" + name() + ", usb = " + id + ", shift = " + shift + ", linux = " + linuxCode + ")";
     }
 }

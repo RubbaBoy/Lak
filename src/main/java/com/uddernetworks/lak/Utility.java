@@ -29,6 +29,18 @@ public class Utility {
     }
 
     /**
+     * Clamps a value between two other inclusive values.
+     *
+     * @param value The value to clamp and return
+     * @param min The minimum value allowed
+     * @param max The maximum value allowed
+     * @return The clamped value
+     */
+    public static double clamp(double value, double min, double max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
+    /**
      * Creates an ARGB hex string from a given {@link Color}, in the format of AARRGGBB. This is decodable by
      * {@link #colorFromHex(String)}.
      *
