@@ -21,17 +21,16 @@ class ColorSoundModulationSerializerTest {
     @Test
     void uriSerializer() throws JsonProcessingException {
         // Reads the AARRGGBB
-        var color = objectMapper.readValue("\"AABBCCDD\"", Color.class);
-        assertEquals(170, color.getAlpha());
+        var color = objectMapper.readValue("\"BBCCDDAA\"", Color.class);
         assertEquals(187, color.getRed());
         assertEquals(204, color.getGreen());
         assertEquals(221, color.getBlue());
+        assertEquals(170, color.getAlpha());
     }
 
     @Test
     void uriDeserializer() throws JsonProcessingException {
         var color = objectMapper.writeValueAsString(new Color(187, 204, 221, 170));
-        assertEquals("\"AABBCCDD\"", color);
+        assertEquals("\"BBCCDDAA\"", color);
     }
-
 }

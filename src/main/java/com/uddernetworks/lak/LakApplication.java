@@ -27,11 +27,6 @@ public class LakApplication implements ApplicationListener<ApplicationReadyEvent
         SpringApplication.run(LakApplication.class, args);
     }
 
-    @Bean
-    public OpenAL openAL() throws ALException {
-        return new OpenAL();
-    }
-
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("Ready!!!!");

@@ -7,6 +7,7 @@ import com.uddernetworks.lak.rest.exceptions.KeyNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
+@CrossOrigin(origins = "*")
 @RequestMapping(path = "/keys")
 public class KeyController {
 
@@ -27,15 +30,18 @@ public class KeyController {
 
     @GetMapping(path = "/list")
     public @ResponseBody
-    Iterable<Key> getAllKeys() {
-        return keyManager.getAllKeys();
+    Iterable<SmallKey> getAllKeys() {
+        return keyManager.getAllKeys()
+                .stream()
+                .map(SmallKey::new)
+                .collect(Collectors.toList());
     }
 
     @PostMapping(path = "/update", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public @ResponseBody
     Map<String, Object> updateKey(@RequestBody KeyEndpointBodies.UpdatingKey updatingKey) {
-        if (KeyEnum.fromId(updatingKey.getKey(), updatingKey.isShift()).isEmpty()) {
-            throw new KeyNotFoundException(updatingKey.getKey());
+        if (updatingKey.getKey() == null) {
+            throw new KeyNotFoundException();
         }
 
         keyManager.updateKey(updatingKey);

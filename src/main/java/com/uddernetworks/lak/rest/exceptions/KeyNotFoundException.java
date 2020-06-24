@@ -7,11 +7,11 @@ import java.util.UUID;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class KeyNotFoundException extends EndpointException {
-    public KeyNotFoundException(int key) {
-        super(HttpStatus.BAD_REQUEST, "The given key ID could not be resolved to a key: " + key);
+    public KeyNotFoundException() {
+        super(HttpStatus.BAD_REQUEST, "The given key ID could not be resolved to a key");
     }
 
-    public KeyNotFoundException(int key, Throwable cause) {
-        super(HttpStatus.BAD_REQUEST, "The given key ID could not be resolved to a key: " + key, cause);
+    public KeyNotFoundException(Throwable cause) {
+        super(HttpStatus.BAD_REQUEST, "The given key ID could not be resolved to a key", cause);
     }
 }

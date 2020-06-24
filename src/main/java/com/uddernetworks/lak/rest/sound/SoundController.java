@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Controller
+@CrossOrigin(origins = "*")
 @RequestMapping(path = "/sounds")
 public class SoundController {
 
@@ -87,7 +89,7 @@ public class SoundController {
     @PostMapping(path = "/addModulator", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     Map<String, Object> addModulator(@RequestBody SoundEndpointBodies.AddRemoveModulator addingModulator) {
-        var variantUUID = addingModulator.getVariantUUID();
+        var variantUUID = addingModulator.getVariantId();
 
         var soundVariantOptional = soundManager.getVariant(variantUUID);
 
@@ -103,7 +105,7 @@ public class SoundController {
     @PostMapping(path = "/removeModulator", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     Map<String, Object> removeModulator(@RequestBody SoundEndpointBodies.AddRemoveModulator removingModulator) {
-        var variantUUID = removingModulator.getVariantUUID();
+        var variantUUID = removingModulator.getVariantId();
 
         var soundVariantOptional = soundManager.getVariant(variantUUID);
 
@@ -119,7 +121,7 @@ public class SoundController {
     @PostMapping(path = "/updateModulator", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     SoundModulation updateModulator(@RequestBody SoundEndpointBodies.UpdatingModulator updatingModulator) {
-        var variantUUID = updatingModulator.getVariantUUID();
+        var variantUUID = updatingModulator.getVariantId();
 
         var soundVariantOptional = soundManager.getVariant(variantUUID);
 

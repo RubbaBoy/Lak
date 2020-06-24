@@ -56,7 +56,7 @@ public class DefaultKeyManager implements KeyManager {
 
     @Override
     public void updateKey(KeyEndpointBodies.UpdatingKey updatingKey) {
-        var storedKeyOptional = keys.stream().filter(key -> key.getKey().getId() == updatingKey.getKey()).findFirst();
+        var storedKeyOptional = keys.stream().filter(key -> key.getKey() == updatingKey.getKey()).findFirst();
         if (storedKeyOptional.isPresent()) {
             var storedKey = storedKeyOptional.get();
 

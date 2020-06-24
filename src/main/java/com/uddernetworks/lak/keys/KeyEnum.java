@@ -120,7 +120,7 @@ public enum KeyEnum {
     KEY_F10(67, 68),
     KEY_F11(68, 87),
     KEY_F12(69, 88),
-    KEY_SYSRQ(70, 99),
+    KEY_SYSRQ(70, 99), // Is this Print Screen?
     KEY_SCROLLLOCK(71, 70),
     KEY_PAUSE(72, 119),
     KEY_INSERT(73, 110),

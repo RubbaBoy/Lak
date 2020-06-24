@@ -88,18 +88,18 @@ public class SoundEndpointBodies {
     }
 
     public static class UpdatingModulator {
-        private final UUID variantUUID;
+        private final UUID variantId;
         private final ModulationId id;
         private final ModulatorData modulatorData;
 
-        UpdatingModulator(UUID variantUUID, ModulationId id, ModulatorData modulatorData) {
-            this.variantUUID = variantUUID;
+        UpdatingModulator(UUID variantId, ModulationId id, ModulatorData modulatorData) {
+            this.variantId = variantId;
             this.id = id;
             this.modulatorData = modulatorData;
         }
 
-        public UUID getVariantUUID() {
-            return variantUUID;
+        public UUID getVariantId() {
+            return variantId;
         }
 
         public ModulationId getId() {
@@ -113,7 +113,7 @@ public class SoundEndpointBodies {
         @Override
         public String toString() {
             return "UpdatingModulator{" +
-                    "variantUUID=" + variantUUID +
+                    "variantUUID=" + variantId +
                     ", id=" + id +
                     ", modulatorData=" + modulatorData +
                     '}';
@@ -121,16 +121,16 @@ public class SoundEndpointBodies {
     }
 
     public static class AddRemoveModulator {
-        private final UUID variantUUID;
+        private final UUID variantId;
         private final ModulationId id;
 
-        public AddRemoveModulator(UUID variantUUID, ModulationId id) {
-            this.variantUUID = variantUUID;
+        public AddRemoveModulator(UUID variantId, ModulationId id) {
+            this.variantId = variantId;
             this.id = id;
         }
 
-        public UUID getVariantUUID() {
-            return variantUUID;
+        public UUID getVariantId() {
+            return variantId;
         }
 
         public ModulationId getId() {
@@ -140,7 +140,7 @@ public class SoundEndpointBodies {
         @Override
         public String toString() {
             return "AddRemoveModulator{" +
-                    "variantUUID=" + variantUUID +
+                    "variantUUID=" + variantId +
                     ", id=" + id +
                     '}';
         }

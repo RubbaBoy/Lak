@@ -1,27 +1,23 @@
 package com.uddernetworks.lak.rest.key;
 
+import com.uddernetworks.lak.keys.KeyEnum;
+
 import java.util.UUID;
 
 public class KeyEndpointBodies {
     public static class UpdatingKey {
-        private final int key;
-        private final Boolean shift;
+        private final KeyEnum key;
         private final UUID variantId;
         private final Boolean loop;
 
-        public UpdatingKey(int key, Boolean shift, UUID variantId, Boolean loop) {
+        public UpdatingKey(KeyEnum key, UUID variantId, Boolean loop) {
             this.key = key;
-            this.shift = shift;
             this.variantId = variantId;
             this.loop = loop;
         }
 
-        public int getKey() {
+        public KeyEnum getKey() {
             return key;
-        }
-
-        public Boolean isShift() {
-            return shift;
         }
 
         public UUID getVariantId() {
