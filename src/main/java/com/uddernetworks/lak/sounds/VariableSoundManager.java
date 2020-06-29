@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -101,11 +102,16 @@ public class VariableSoundManager implements SoundManager {
 
     @Override
     public SoundVariant addSoundVariant(Sound sound) {
+        return addSoundVariant(null, sound);
+    }
+
+    @Override
+    public SoundVariant addSoundVariant(String description, Sound sound) {
         if (!isSoundAdded(sound.getId())) {
             addSound(sound);
         }
 
-        var variant = new DefaultSoundVariant(UUID.randomUUID(), sound);
+        var variant = new DefaultSoundVariant(UUID.randomUUID(), sound, description, new Color(0));
         soundVariants.add(variant);
         waitFuture(synchronous, soundRepository.addVariant(variant));
         return variant;
@@ -130,6 +136,7 @@ public class VariableSoundManager implements SoundManager {
             var storedVariant = storedVariantOptional.get();
 
             var soundId = updatingVariant.getSoundId();
+            LOGGER.debug("soundId = {}", soundId);
             if (soundId != null) {
                 sounds.stream().filter(sound -> sound.getId().equals(updatingVariant.getSoundId()))
                         .findFirst()
@@ -137,11 +144,13 @@ public class VariableSoundManager implements SoundManager {
             }
 
             var description = updatingVariant.getDescription();
+            LOGGER.debug("description = {}", description);
             if (description != null) {
                 storedVariant.setDescription(description);
             }
 
             var color = updatingVariant.getColor();
+            LOGGER.debug("color = {}", color);
             if (color != null) {
                 storedVariant.setColor(color);
             }

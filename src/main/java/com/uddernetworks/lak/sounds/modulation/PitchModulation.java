@@ -70,7 +70,7 @@ public class PitchModulation extends SoundModulation {
 
     @Override
     public void updateFromEndpoint(ModulatorData data) {
-        pitch = clamp(data.<Double>get("pitch", 1D), 0.5, 2);
+        pitch = clamp(data.<Number>get("pitch", 1D).doubleValue(), 0.5, 2);
     }
 
     @Override

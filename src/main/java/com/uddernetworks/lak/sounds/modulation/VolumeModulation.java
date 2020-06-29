@@ -71,7 +71,7 @@ public class VolumeModulation extends SoundModulation {
 
     @Override
     public void updateFromEndpoint(ModulatorData data) {
-        volume = clamp(data.<Double>get("volume", 1D), 0, 1000000);
+        volume = clamp(data.<Number>get("volume", 1D).doubleValue(), 0, 1000000);
     }
 
     @Override

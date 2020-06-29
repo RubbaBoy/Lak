@@ -35,7 +35,7 @@ public interface SoundManager {
     boolean isSoundAdded(UUID soundUUID);
 
     /**
-     * Checks if the given {@link SoundVariant} has been added via {@link #addSoundVariant(Sound)}.
+     * Checks if the given {@link SoundVariant} has been added via {@link #addSoundVariant(String, Sound)}.
      *
      * @param soundVariant The {@link SoundVariant} to check
      * @return If the {@link SoundVariant} has been added
@@ -76,7 +76,7 @@ public interface SoundManager {
 
     /**
      * Adds a {@link Sound} to be used in listings and storage. This must be added before being used by a
-     * {@link SoundVariant} via {@link #addSoundVariant(Sound)}.
+     * {@link SoundVariant} via {@link #addSoundVariant(String, Sound)}.
      * This method also asynchronously updates the database via {@link SoundRepository#addSound(Sound)}.
      *
      * @param sound The {@link Sound} to add
@@ -103,11 +103,25 @@ public interface SoundManager {
      * Adds a {@link SoundVariant} based off of a given {@link Sound}.
      * If the {@link Sound} has not been addeed via {@link #addSound(Sound)}, it will be added automatically.
      * This method also asynchronously updates the database via {@link SoundRepository#addVariant(SoundVariant)}.
+     * This is equivalent to invoking {@link #addSoundVariant(String, Sound)} with the description being null.
+     *
      *
      * @param sound The base {@link Sound}.
      * @return The created {@link SoundVariant}
      */
     SoundVariant addSoundVariant(Sound sound);
+
+    /**
+     * Adds a {@link SoundVariant} based off of a given {@link Sound}.
+     * If the {@link Sound} has not been addeed via {@link #addSound(Sound)}, it will be added automatically.
+     * This method also asynchronously updates the database via {@link SoundRepository#addVariant(SoundVariant)}.
+     *
+     * @param description The description (sometimes used as a name) of the sound, used for display purposes, not
+     *                    identification. May be null.
+     * @param sound The base {@link Sound}.
+     * @return The created {@link SoundVariant}
+     */
+    SoundVariant addSoundVariant(String description, Sound sound);
 
     /**
      * Removes a given {@link SoundVariant}.

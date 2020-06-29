@@ -1,6 +1,5 @@
 package com.uddernetworks.lak.database.sound;
 
-import com.uddernetworks.lak.database.DatabaseUtility;
 import com.uddernetworks.lak.database.RepositoryInitializer;
 import com.uddernetworks.lak.sounds.DefaultSoundVariant;
 import com.uddernetworks.lak.sounds.FileSound;
@@ -12,15 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowCallbackHandler;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.nio.file.Paths;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;

@@ -67,7 +67,7 @@ public class SoundController {
     SoundVariant addVariant(@RequestBody SoundEndpointBodies.AddingVariant addingVariant) {
         var sound = soundManager.getSound(addingVariant.getSoundId()).orElseThrow(() ->
                 new SoundNotFoundException(addingVariant.getSoundId()));
-        return soundManager.addSoundVariant(sound);
+        return soundManager.addSoundVariant(addingVariant.getName(), sound);
     }
 
     @PostMapping(path = "/updateVariant", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})

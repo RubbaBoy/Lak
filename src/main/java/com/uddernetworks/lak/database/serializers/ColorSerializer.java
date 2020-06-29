@@ -31,12 +31,17 @@ public class ColorSerializer {
 
     public static class ColorJsonDeserializer extends JsonDeserializer<Color> {
 
+        private static final Logger LOGGER = LoggerFactory.getLogger(ColorJsonDeserializer.class);
+
         @Override
         public Color deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
             var hex = jsonParser.getCodec().readValue(jsonParser, String.class);
+            LOGGER.debug("decoding hex = {}", hex);
 
             try {
-                return colorFromHex(hex);
+                var col = colorFromHex(hex);
+                LOGGER.debug("col = {}", col);
+                return col;
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 return null;
