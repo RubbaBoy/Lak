@@ -1,4 +1,4 @@
-package com.uddernetworks.lak.pi;
+package com.uddernetworks.lak.pi.api;
 
 public interface PiDetails {
 

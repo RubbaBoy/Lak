@@ -1,6 +1,6 @@
 package com.uddernetworks.lak.pi;
 
-import com.uddernetworks.lak.CommandRunner;
+import com.uddernetworks.lak.pi.api.PiDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;

@@ -1,8 +1,8 @@
-package com.uddernetworks.lak.pi.button;
+package com.uddernetworks.lak.pi.api.button;
 
 import java.util.List;
 
-public interface ButtonHandler {
+public interface ButtonHandler<T extends ButtonId> {
 
     /**
      * Starts handling buttons triggers.
@@ -15,13 +15,13 @@ public interface ButtonHandler {
      * @param button The button to register
      * @return The current {@link ButtonHandler} for chaining
      */
-    ButtonHandler registerButton(Button<ButtonId> button);
+    ButtonHandler<T> registerButton(Button<T> button);
 
     /**
      * Gets an unmodifiable list of registered buttons.
      *
      * @return An unmodifiable list of registered buttons
      */
-    List<Button<ButtonId>> getButtons();
+    List<Button<T>> getButtons();
 
 }

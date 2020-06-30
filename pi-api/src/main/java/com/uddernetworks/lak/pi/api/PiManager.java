@@ -1,6 +1,6 @@
-package com.uddernetworks.lak.pi;
+package com.uddernetworks.lak.pi.api;
 
-import com.uddernetworks.lak.pi.component.PiComponent;
+import com.uddernetworks.lak.pi.api.component.PiComponent;
 
 public interface PiManager {
 

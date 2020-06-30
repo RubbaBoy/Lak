@@ -1,26 +1,28 @@
 package com.uddernetworks.lak.pi.button;
 
+import com.uddernetworks.lak.pi.api.button.Button;
+
 import java.util.function.Consumer;
 
 /**
  * A button that is toggleable down or up.
  */
-public class ToggleButton implements Button<ButtonId> {
+public class ToggleButton implements Button<GPIOButtonId> {
 
-    private final ButtonId buttonId;
+    private final GPIOButtonId GPIOButtonId;
     private final String name;
 
     private Consumer<Boolean> listener;
     private boolean pressed;
 
-    public ToggleButton(ButtonId buttonId, String name) {
-        this.buttonId = buttonId;
+    public ToggleButton(GPIOButtonId GPIOButtonId, String name) {
+        this.GPIOButtonId = GPIOButtonId;
         this.name = name;
     }
 
     @Override
-    public ButtonId getId() {
-        return buttonId;
+    public GPIOButtonId getId() {
+        return GPIOButtonId;
     }
 
     @Override
@@ -51,11 +53,11 @@ public class ToggleButton implements Button<ButtonId> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ToggleButton that = (ToggleButton) o;
-        return buttonId == that.buttonId;
+        return GPIOButtonId == that.GPIOButtonId;
     }
 
     @Override
     public int hashCode() {
-        return buttonId.hashCode();
+        return GPIOButtonId.hashCode();
     }
 }

@@ -1,13 +1,9 @@
-package com.uddernetworks.lak.pi.light;
-
-import com.uddernetworks.lak.pi.button.Button;
-import com.uddernetworks.lak.pi.button.ButtonHandler;
-import com.uddernetworks.lak.pi.button.ButtonId;
+package com.uddernetworks.lak.pi.api.light;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface LightHandler {
+public interface LightHandler<T extends LightId> {
 
     /**
      * Registers a light to be used in the future.
@@ -15,14 +11,14 @@ public interface LightHandler {
      * @param light The light to register
      * @return The current {@link LightHandler} for chaining
      */
-    LightHandler registerLight(Light<LightId> light);
+    LightHandler<T> registerLight(Light<T> light);
 
     /**
      * Gets an unmodifiable list of registered lights.
      *
      * @return An unmodifiable list of registered lights
      */
-    List<Light<LightId>> getLights();
+    List<Light<T>> getLights();
 
     /**
      * Gets a {@link Light} by its {@link LightId}, if registered via {@link #registerLight(Light)}.
@@ -30,5 +26,5 @@ public interface LightHandler {
      * @param id The {@link LightId}
      * @return The light retrieved
      */
-    Optional<Light<LightId>> getLight(LightId id);
+    Optional<Light<T>> getLight(T id);
 }

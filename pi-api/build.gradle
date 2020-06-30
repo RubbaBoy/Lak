@@ -8,8 +8,9 @@ repositories {
     mavenCentral()
 }
 
+// curl -sSL https://pi4j.com/install | sudo bash
 dependencies {
-    implementation project(':pi-api')
+//    implementation project(':')
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'com.pi4j:pi4j-core:1.2'

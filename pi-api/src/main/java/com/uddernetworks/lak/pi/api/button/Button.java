@@ -1,6 +1,6 @@
-package com.uddernetworks.lak.pi.button;
+package com.uddernetworks.lak.pi.api.button;
 
-import com.uddernetworks.lak.pi.component.PiComponent;
+import com.uddernetworks.lak.pi.api.component.PiComponent;
 
 import java.util.function.Consumer;
 
@@ -9,7 +9,7 @@ import java.util.function.Consumer;
  *
  * @param <T> The button identifying type
  */
-public interface Button<T> extends PiComponent<T> {
+public interface Button<T extends ButtonId> extends PiComponent<T> {
 
     /**
      * Sets the listener to a consumer that is accepted when the current button is pressed, accepting the new boolean
