@@ -9,7 +9,7 @@ import java.util.function.Consumer;
  *
  * @param <T> The button identifying type
  */
-public interface Button<T extends ButtonId> extends PiComponent<T> {
+public interface Button<T extends AbstractedButton> extends PiComponent<T> {
 
     /**
      * Sets the listener to a consumer that is accepted when the current button is pressed, accepting the new boolean

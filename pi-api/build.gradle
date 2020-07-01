@@ -1,27 +1,24 @@
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
+//apply plugin: 'org.springframework.boot'
+//apply plugin: 'io.spring.dependency-management'
 apply plugin: 'java'
 
 version = '0.0.1-SNAPSHOT'
 
 repositories {
-    mavenCentral()
+//    mavenCentral()
 }
 
-// curl -sSL https://pi4j.com/install | sudo bash
 dependencies {
-//    implementation project(':')
-
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'com.pi4j:pi4j-core:1.2'
-    implementation 'com.pi4j:pi4j-device:1.2'
-    implementation 'com.pi4j:pi4j-gpio-extension:1.2'
-
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
+//    implementation 'org.springframework.boot:spring-boot-starter'
+//    implementation 'com.pi4j:pi4j-core:1.2'
+//    implementation 'com.pi4j:pi4j-device:1.2'
+//    implementation 'com.pi4j:pi4j-gpio-extension:1.2'
+//
+//    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+//
+//    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+//
+//    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+//        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+//    }
 }

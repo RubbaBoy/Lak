@@ -2,26 +2,33 @@ package com.uddernetworks.lak;
 
 import com.uddernetworks.lak.keys.KeyboardInput;
 import com.uddernetworks.lak.pi.api.PiManager;
+import com.uddernetworks.lak.pi.api.button.AbstractedButton;
+import com.uddernetworks.lak.pi.api.button.ButtonHandler;
+import com.uddernetworks.lak.pi.api.button.ButtonId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 
-@SpringBootApplication(scanBasePackages = {"com"})
+@SpringBootApplication(scanBasePackages = {"com.uddernetworks.lak"})
 public class LakApplication implements ApplicationListener<ApplicationReadyEvent> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LakApplication.class);
 
     private final KeyboardInput keyboardInput;
     private final PiManager piManager;
+    private final ButtonHandler<AbstractedButton> buttonHandler;
 
     public LakApplication(@Qualifier("devEventKeyboardInput") KeyboardInput keyboardInput,
-                          @Qualifier("piZeroManager") PiManager piManager) {
+                          PiManager piManager,
+                          ButtonHandler<AbstractedButton> buttonHandler) {
         this.keyboardInput = keyboardInput;
         this.piManager = piManager;
+        this.buttonHandler = buttonHandler;
     }
 
     public static void main(String[] args) {
@@ -33,6 +40,9 @@ public class LakApplication implements ApplicationListener<ApplicationReadyEvent
         LOGGER.debug("Registering and listening to components...");
         piManager.registerComponents();
         piManager.startListening();
+
+        var redButton = buttonHandler.buttonFromId(ButtonId.RED);
+        LOGGER.debug("{} redButton = {} ID = {} name = {}", redButton.getClass().getCanonicalName(), redButton, redButton.getId().name(), redButton.getName());
 
         LOGGER.info("Listening for keyboard events...");
         keyboardInput.startListening();

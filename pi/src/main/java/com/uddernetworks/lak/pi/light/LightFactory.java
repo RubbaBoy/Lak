@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 public class LightFactory {
 
     /**
-     * Creates an instance of {@link Light< GPIOLightId >} from a given {@link GPIOLightId}.
+     * Creates an instance of {@link Light< GPIOAbstractedLight >} from a given {@link GPIOAbstractedLight}.
      *
-     * @param GPIOLightId The {@link GPIOLightId}
-     * @return The created {@link Light< GPIOLightId >}
+     * @param GPIOLightId The {@link GPIOAbstractedLight}
+     * @return The created {@link Light< GPIOAbstractedLight >}
      */
-    public Light<GPIOLightId> createLight(GPIOLightId GPIOLightId) {
+    public Light<GPIOAbstractedLight> createLight(GPIOAbstractedLight GPIOLightId) {
         switch (GPIOLightId) {
             case BUTTON_RED:
             case BUTTON_GREEN:

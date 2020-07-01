@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component("caseButtonFactory")
 public class CaseButtonFactory {
 
-    public Button<GPIOButtonId> createButton(GPIOButtonId GPIOButtonId) {
+    public Button<GPIOAbstractedButton> createButton(GPIOAbstractedButton GPIOButtonId) {
         switch (GPIOButtonId) {
             case RED:
             case GREEN:

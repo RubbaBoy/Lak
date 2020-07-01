@@ -1,11 +1,9 @@
 package com.uddernetworks.lak.pi;
 
 import com.uddernetworks.lak.pi.api.PiDetails;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
-@Component("autoPiDetails")
 public class AutoPiDetails implements PiDetails {
 
     private final String hardware;

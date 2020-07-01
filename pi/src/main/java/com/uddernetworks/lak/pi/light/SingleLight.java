@@ -5,19 +5,19 @@ import com.uddernetworks.lak.pi.api.light.Light;
 /**
  * A simple single-color LED.
  */
-public class SingleLight implements Light<GPIOLightId> {
+public class SingleLight implements Light<GPIOAbstractedLight> {
 
-    private final GPIOLightId GPIOLightId;
+    private final GPIOAbstractedLight GPIOLightId;
     private final String name;
     private boolean status = false;
 
-    public SingleLight(GPIOLightId GPIOLightId, String name) {
+    public SingleLight(GPIOAbstractedLight GPIOLightId, String name) {
         this.GPIOLightId = GPIOLightId;
         this.name = name;
     }
 
     @Override
-    public GPIOLightId getId() {
+    public GPIOAbstractedLight getId() {
         return GPIOLightId;
     }
 

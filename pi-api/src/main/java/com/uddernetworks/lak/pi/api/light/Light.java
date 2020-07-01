@@ -2,7 +2,7 @@ package com.uddernetworks.lak.pi.api.light;
 
 import com.uddernetworks.lak.pi.api.component.PiComponent;
 
-public interface Light<T extends LightId> extends PiComponent<T> {
+public interface Light<T extends AbstractedLight> extends PiComponent<T> {
 
     /**
      * Sets the status of the light, if it should be on. See implementation for possibly more advanced toggling features

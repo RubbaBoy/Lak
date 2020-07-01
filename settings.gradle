@@ -1,3 +1,4 @@
 rootProject.name = 'lak'
 include 'pi-api'
 include 'pi'
+include 'dummy-pi'

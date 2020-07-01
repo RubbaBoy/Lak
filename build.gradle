@@ -22,8 +22,10 @@ dependencies {
     implementation 'org.urish.openal:java-openal:1.0.0'
     implementation 'org.hsqldb:hsqldb:2.5.0'
 
-    api project('pi')
-    implementation project('pi-api')
+    api project('pi-api')
+
+//    implementation project('pi')
+    implementation project('dummy-pi')
 
     testImplementation 'org.hsqldb:hsqldb:2.5.0'
     runtimeOnly 'com.h2database:h2'

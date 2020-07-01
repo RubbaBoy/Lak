@@ -2,6 +2,7 @@ package com.uddernetworks.lak.pi.button;
 
 import com.uddernetworks.lak.pi.api.button.Button;
 import com.uddernetworks.lak.pi.api.button.ButtonHandler;
+import com.uddernetworks.lak.pi.api.button.ButtonId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -10,13 +11,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Component("gpioButtonHandler")
-public class GPIOButtonHandler implements ButtonHandler<GPIOButtonId> {
+public class GPIOButtonHandler implements ButtonHandler<GPIOAbstractedButton> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GPIOButtonHandler.class);
 
     private boolean listening = false;
-    private final List<Button<GPIOButtonId>> buttons = new ArrayList<>();
+    private final List<Button<GPIOAbstractedButton>> buttons = new ArrayList<>();
 
     @Override
     public void startListening() {
@@ -28,7 +28,12 @@ public class GPIOButtonHandler implements ButtonHandler<GPIOButtonId> {
     }
 
     @Override
-    public ButtonHandler<GPIOButtonId> registerButton(Button<GPIOButtonId> button) {
+    public GPIOAbstractedButton buttonFromId(ButtonId buttonId) {
+        return null;
+    }
+
+    @Override
+    public ButtonHandler<GPIOAbstractedButton> registerButton(Button<GPIOAbstractedButton> button) {
         if (listening) {
             throw new IllegalStateException("Attempted the registry of button while listening has already begun.");
         }
@@ -38,7 +43,7 @@ public class GPIOButtonHandler implements ButtonHandler<GPIOButtonId> {
     }
 
     @Override
-    public List<Button<GPIOButtonId>> getButtons() {
+    public List<Button<GPIOAbstractedButton>> getButtons() {
         return Collections.unmodifiableList(buttons);
     }
 }

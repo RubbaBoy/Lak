@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
+//import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -32,7 +32,7 @@ public class MySQLSoundRepository implements SoundRepository {
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public CompletableFuture<Void> addSound(Sound sound) {
         return CompletableFuture.runAsync(() ->
                 jdbc.execute("INSERT INTO `sounds` VALUES (?, ?);", executeArgs(

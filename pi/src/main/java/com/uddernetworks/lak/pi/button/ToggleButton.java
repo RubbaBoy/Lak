@@ -7,21 +7,21 @@ import java.util.function.Consumer;
 /**
  * A button that is toggleable down or up.
  */
-public class ToggleButton implements Button<GPIOButtonId> {
+public class ToggleButton implements Button<GPIOAbstractedButton> {
 
-    private final GPIOButtonId GPIOButtonId;
+    private final GPIOAbstractedButton GPIOButtonId;
     private final String name;
 
     private Consumer<Boolean> listener;
     private boolean pressed;
 
-    public ToggleButton(GPIOButtonId GPIOButtonId, String name) {
+    public ToggleButton(GPIOAbstractedButton GPIOButtonId, String name) {
         this.GPIOButtonId = GPIOButtonId;
         this.name = name;
     }
 
     @Override
-    public GPIOButtonId getId() {
+    public GPIOAbstractedButton getId() {
         return GPIOButtonId;
     }
 
