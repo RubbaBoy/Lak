@@ -6,12 +6,13 @@ import java.util.Optional;
 public interface LightHandler<T extends AbstractedLight> {
 
     /**
-     * Gets the associated {@link AbstractedLight} with the given {@link LightId}.
+     * Gets the associated {@link AbstractedLight} with the given {@link LightId} if registered via
+     * {@link #registerLight(Light)}.
      *
      * @param lightId The {@link LightId} to get the light of
      * @return The associated {@link AbstractedLight}
      */
-    T lightFromId(LightId lightId);
+    Optional<Light<T>> lightFromId(LightId lightId);
 
     /**
      * Registers a light to be used in the future.
@@ -27,12 +28,4 @@ public interface LightHandler<T extends AbstractedLight> {
      * @return An unmodifiable list of registered lights
      */
     List<Light<T>> getLights();
-
-    /**
-     * Gets a {@link Light} by its {@link AbstractedLight}, if registered via {@link #registerLight(Light)}.
-     *
-     * @param id The {@link AbstractedLight}
-     * @return The light retrieved
-     */
-    Optional<Light<T>> getLight(T id);
 }

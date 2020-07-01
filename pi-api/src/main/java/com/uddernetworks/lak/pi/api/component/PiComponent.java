@@ -8,7 +8,7 @@ package com.uddernetworks.lak.pi.api.component;
 public interface PiComponent<T> {
 
     /**
-     * Gets the unique identifier of type T.
+     * Gets the unique identifier of the enum identifier.
      *
      * @return The unique identifier
      */

@@ -4,10 +4,10 @@ import com.uddernetworks.lak.pi.api.button.AbstractedButton;
 import com.uddernetworks.lak.pi.api.button.Button;
 import com.uddernetworks.lak.pi.api.button.ButtonHandler;
 import com.uddernetworks.lak.pi.api.button.ButtonId;
-import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class DummyButtonHandler implements ButtonHandler<AbstractedButton> {
 
@@ -16,8 +16,8 @@ public class DummyButtonHandler implements ButtonHandler<AbstractedButton> {
     }
 
     @Override
-    public AbstractedButton buttonFromId(ButtonId buttonId) {
-        return DummyButton.buttonFrom(buttonId);
+    public Optional<Button<AbstractedButton>> buttonFromId(ButtonId buttonId) {
+        return Optional.empty();
     }
 
     @Override

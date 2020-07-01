@@ -1,6 +1,7 @@
 package com.uddernetworks.lak.pi.api.button;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ButtonHandler<T extends AbstractedButton> {
 
@@ -10,12 +11,13 @@ public interface ButtonHandler<T extends AbstractedButton> {
     void startListening();
 
     /**
-     * Gets an {@link AbstractedButton} from its given {@link ButtonId}. If none is bound, an exception is thrown.
+     * Gets an {@link Button} from its given {@link ButtonId}. The implementation may not contain the specific
+     * {@link Button}, in which case an empty optional is given.
      *
      * @param buttonId The {@link ButtonId} to get from
-     * @return The associated {@link AbstractedButton}
+     * @return The associated {@link Button}
      */
-    T buttonFromId(ButtonId buttonId);
+    Optional<Button<T>> buttonFromId(ButtonId buttonId);
 
     /**
      * Registers a button to handle. This must be invoked before {@link #startListening()} has been invoked.

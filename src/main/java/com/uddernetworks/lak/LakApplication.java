@@ -42,7 +42,7 @@ public class LakApplication implements ApplicationListener<ApplicationReadyEvent
         piManager.startListening();
 
         var redButton = buttonHandler.buttonFromId(ButtonId.RED);
-        LOGGER.debug("{} redButton = {} ID = {} name = {}", redButton.getClass().getCanonicalName(), redButton, redButton.getId().name(), redButton.getName());
+        LOGGER.debug("Button = {}", redButton);
 
         LOGGER.info("Listening for keyboard events...");
         keyboardInput.startListening();

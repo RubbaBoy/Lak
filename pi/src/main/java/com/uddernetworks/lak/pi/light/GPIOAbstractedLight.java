@@ -1,5 +1,6 @@
 package com.uddernetworks.lak.pi.light;
 
+import com.uddernetworks.lak.pi.api.ComponentNotFoundException;
 import com.uddernetworks.lak.pi.api.light.AbstractedLight;
 import com.uddernetworks.lak.pi.api.light.LightId;
 import com.uddernetworks.lak.pi.button.GPIOAbstractedButton;
@@ -76,6 +77,6 @@ public enum GPIOAbstractedLight implements AbstractedLight {
         return Arrays.stream(values())
                 .filter(light -> light.lightId == lightId)
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No GPIOAbstractedLight found for " + lightId.name()));
+                .orElseThrow(() -> new ComponentNotFoundException(lightId));
     }
 }

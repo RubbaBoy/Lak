@@ -1,5 +1,6 @@
 package com.uddernetworks.lak.pi.button;
 
+import com.uddernetworks.lak.pi.api.ComponentNotFoundException;
 import com.uddernetworks.lak.pi.api.button.AbstractedButton;
 import com.uddernetworks.lak.pi.api.button.ButtonId;
 
@@ -63,6 +64,6 @@ public enum GPIOAbstractedButton implements AbstractedButton {
         return Arrays.stream(values())
                 .filter(button -> button.buttonId == buttonId)
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No GPIOAbstractedButton found for " + buttonId.name()));
+                .orElseThrow(() -> new ComponentNotFoundException(buttonId));
     }
 }

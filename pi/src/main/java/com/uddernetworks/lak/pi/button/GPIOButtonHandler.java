@@ -1,5 +1,6 @@
 package com.uddernetworks.lak.pi.button;
 
+import com.uddernetworks.lak.pi.api.ComponentNotFoundException;
 import com.uddernetworks.lak.pi.api.button.Button;
 import com.uddernetworks.lak.pi.api.button.ButtonHandler;
 import com.uddernetworks.lak.pi.api.button.ButtonId;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class GPIOButtonHandler implements ButtonHandler<GPIOAbstractedButton> {
 
@@ -28,8 +30,9 @@ public class GPIOButtonHandler implements ButtonHandler<GPIOAbstractedButton> {
     }
 
     @Override
-    public GPIOAbstractedButton buttonFromId(ButtonId buttonId) {
-        return null;
+    public Optional<Button<GPIOAbstractedButton>> buttonFromId(ButtonId buttonId) {
+        return buttons.stream().filter(button -> button.getId().getId() == buttonId)
+                .findFirst();
     }
 
     @Override
