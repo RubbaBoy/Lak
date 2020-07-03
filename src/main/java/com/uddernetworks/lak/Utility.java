@@ -48,7 +48,7 @@ public class Utility {
      * @return The created hex string
      */
     public static String hexFromColor(Color color) {
-        return String.format("%02X%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        return String.format("%02X%02X%02X%02X", color.getAlpha(), color.getRed(), color.getGreen(), color.getBlue());
     }
 
     /**
@@ -62,7 +62,7 @@ public class Utility {
             return null;
         }
 
-        return new Color(parseColorHex(hex, 0), parseColorHex(hex, 1), parseColorHex(hex, 2), parseColorHex(hex, 3));
+        return new Color(parseColorHex(hex, 1), parseColorHex(hex, 2), parseColorHex(hex, 3), parseColorHex(hex, 0));
     }
 
     /**

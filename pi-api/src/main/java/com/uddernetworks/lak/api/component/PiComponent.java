@@ -1,4 +1,4 @@
-package com.uddernetworks.lak.pi.api.component;
+package com.uddernetworks.lak.api.component;
 
 /**
  * An interface of components such as lights, buttons, etc.

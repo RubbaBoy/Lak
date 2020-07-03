@@ -1,9 +1,9 @@
 package com.uddernetworks.lak.pi.button;
 
-import com.uddernetworks.lak.pi.api.button.AbstractedButton;
-import com.uddernetworks.lak.pi.api.button.Button;
-import com.uddernetworks.lak.pi.api.button.ButtonHandler;
-import com.uddernetworks.lak.pi.api.button.ButtonId;
+import com.uddernetworks.lak.api.button.AbstractedButton;
+import com.uddernetworks.lak.api.button.Button;
+import com.uddernetworks.lak.api.button.ButtonHandler;
+import com.uddernetworks.lak.api.button.ButtonId;
 
 import java.util.Collections;
 import java.util.List;

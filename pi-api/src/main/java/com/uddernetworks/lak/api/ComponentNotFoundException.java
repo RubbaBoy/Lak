@@ -1,10 +1,10 @@
-package com.uddernetworks.lak.pi.api;
+package com.uddernetworks.lak.api;
 
-import com.uddernetworks.lak.pi.api.button.Button;
-import com.uddernetworks.lak.pi.api.button.ButtonId;
-import com.uddernetworks.lak.pi.api.component.PiComponent;
-import com.uddernetworks.lak.pi.api.light.Light;
-import com.uddernetworks.lak.pi.api.light.LightId;
+import com.uddernetworks.lak.api.button.Button;
+import com.uddernetworks.lak.api.button.ButtonId;
+import com.uddernetworks.lak.api.component.PiComponent;
+import com.uddernetworks.lak.api.light.Light;
+import com.uddernetworks.lak.api.light.LightId;
 
 public class ComponentNotFoundException extends RuntimeException {
 

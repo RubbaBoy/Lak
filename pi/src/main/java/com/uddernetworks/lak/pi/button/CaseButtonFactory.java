@@ -1,6 +1,6 @@
 package com.uddernetworks.lak.pi.button;
 
-import com.uddernetworks.lak.pi.api.button.Button;
+import com.uddernetworks.lak.api.button.Button;
 import org.springframework.stereotype.Component;
 
 @Component("caseButtonFactory")

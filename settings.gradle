@@ -1,4 +1,5 @@
 rootProject.name = 'lak'
-include 'pi-api'
-include 'pi'
-include 'dummy-pi'
+//include 'pi'
+//include 'okok'
+include 'pi-api', 'pi', 'dummy-pi'
+//include 'dummy-pi'

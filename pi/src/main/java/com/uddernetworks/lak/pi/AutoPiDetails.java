@@ -1,6 +1,6 @@
 package com.uddernetworks.lak.pi;
 
-import com.uddernetworks.lak.pi.api.PiDetails;
+import com.uddernetworks.lak.api.PiDetails;
 
 import java.util.Arrays;
 

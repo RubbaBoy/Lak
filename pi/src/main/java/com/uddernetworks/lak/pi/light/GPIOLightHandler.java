@@ -1,9 +1,10 @@
 package com.uddernetworks.lak.pi.light;
 
-import com.uddernetworks.lak.pi.api.ComponentNotFoundException;
-import com.uddernetworks.lak.pi.api.light.Light;
-import com.uddernetworks.lak.pi.api.light.LightHandler;
-import com.uddernetworks.lak.pi.api.light.LightId;
+import com.uddernetworks.lak.api.light.Light;
+import com.uddernetworks.lak.api.light.LightHandler;
+import com.uddernetworks.lak.api.light.LightId;
+import com.uddernetworks.lak.pi.gpio.PinController;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +13,12 @@ import java.util.Optional;
 
 public class GPIOLightHandler implements LightHandler<GPIOAbstractedLight> {
 
+    private final PinController pinController;
     private final List<Light<GPIOAbstractedLight>> lights = new ArrayList<>();
+
+    public GPIOLightHandler(@Qualifier("gpioPinController") PinController pinController) {
+        this.pinController = pinController;
+    }
 
     @Override
     public Optional<Light<GPIOAbstractedLight>> lightFromId(LightId lightId) {

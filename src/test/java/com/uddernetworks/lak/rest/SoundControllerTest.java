@@ -2,8 +2,10 @@ package com.uddernetworks.lak.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uddernetworks.lak.LakApplication;
 import com.uddernetworks.lak.ResultList;
 import com.uddernetworks.lak.Utility;
+import com.uddernetworks.lak.database.serializers.URISerializer;
 import com.uddernetworks.lak.sounds.FileSound;
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundManager;
@@ -18,10 +20,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 
 import java.awt.Color;
 import java.net.URI;
@@ -212,7 +219,7 @@ public class SoundControllerTest {
         var variant = addDatabaseSoundVariant(sound);
 
         // Make a request to the testing endpoint, adding a volume modulator
-        var json = objectMapper.readValue(post("addModulator", Map.of("variantUUID", variant.getId(), "id", ModulationId.VOLUME.getId())), Map.class);
+        var json = objectMapper.readValue(post("addModulator", Map.of("variantId", variant.getId(), "id", ModulationId.VOLUME.getId())), Map.class);
 
         // Ensure it has been added
         assertEquals("ok", json.get("status"));
@@ -230,7 +237,7 @@ public class SoundControllerTest {
         assertEquals(1, variant.getModulators().size());
 
         // Make a request to the testing endpoint, removing the modulator with the given IDs
-        var json = objectMapper.readValue(post("removeModulator", Map.of("variantUUID", variant.getId(), "id", ModulationId.VOLUME.getId())), Map.class);
+        var json = objectMapper.readValue(post("removeModulator", Map.of("variantId", variant.getId(), "id", ModulationId.VOLUME.getId())), Map.class);
 
         // Ensure it has been removed
         assertEquals("ok", json.get("status"));
@@ -248,7 +255,7 @@ public class SoundControllerTest {
         // Send a request to the testing endpoint to update the modulator with a volume of 0.45
         var json = (Map<?, ?>) objectMapper.readValue(post("updateModulator",
                 Map.of(
-                        "variantUUID", variant.getId(),
+                        "variantId", variant.getId(),
                         "id", 0,
                         "modulatorData", Map.of("volume", 0.45))), Map.class);
 

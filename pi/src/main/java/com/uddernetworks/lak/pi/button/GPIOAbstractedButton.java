@@ -1,15 +1,15 @@
 package com.uddernetworks.lak.pi.button;
 
-import com.uddernetworks.lak.pi.api.ComponentNotFoundException;
-import com.uddernetworks.lak.pi.api.button.AbstractedButton;
-import com.uddernetworks.lak.pi.api.button.ButtonId;
+import com.uddernetworks.lak.api.ComponentNotFoundException;
+import com.uddernetworks.lak.api.button.AbstractedButton;
+import com.uddernetworks.lak.api.button.ButtonId;
 
 import java.util.Arrays;
 
 public enum GPIOAbstractedButton implements AbstractedButton {
-    RED(ButtonId.RED, "Red", 0),
-    GREEN(ButtonId.GREEN, "Green", 1),
-    BLUE(ButtonId.BLUE, "Blue", 2);
+    RED(ButtonId.RED, "Red", 11),
+    GREEN(ButtonId.GREEN, "Green", 19),
+    BLUE(ButtonId.BLUE, "Blue", 6);
 
     private final ButtonId buttonId;
     private final String name;

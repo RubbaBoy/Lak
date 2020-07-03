@@ -2,30 +2,35 @@ plugins {
     id 'org.springframework.boot' version '2.3.0.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
-    id 'java-library'
 }
 
 group = 'com.uddernetworks.lak'
-version = '0.0.1-SNAPSHOT'
+version = '0.1.0-SNAPSHOT'
 sourceCompatibility = '11'
+
+task genLak(type: Jar){
+    baseName = 'lak'
+    with jar
+}
+jar.dependsOn genLak
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
-//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.urish.openal:java-openal:1.0.0'
     implementation 'org.hsqldb:hsqldb:2.5.0'
 
-    api project('pi-api')
 
-//    implementation project('pi')
-    implementation project('dummy-pi')
+    implementation project(':pi-api')
+    implementation project(':dummy-pi')
+//    implementation project(':pi')
 
     testImplementation 'org.hsqldb:hsqldb:2.5.0'
     runtimeOnly 'com.h2database:h2'
@@ -41,6 +46,17 @@ dependencies {
 }
 
 compileJava.inputs.files(processResources)
+
+configurations {
+    testArtifacts.extendsFrom testRuntime
+}
+task testJar(type: Jar) {
+    classifier "test"
+    from sourceSets.test.output
+}
+artifacts {
+    testArtifacts testJar
+}
 
 test {
     useJUnitPlatform()

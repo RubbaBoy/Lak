@@ -1,6 +1,6 @@
-package com.uddernetworks.lak.pi.api.button;
+package com.uddernetworks.lak.api.button;
 
-import com.uddernetworks.lak.pi.api.component.PiComponent;
+import com.uddernetworks.lak.api.component.PiComponent;
 
 import java.util.function.Consumer;
 

@@ -2,12 +2,16 @@ package com.uddernetworks.lak.database;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uddernetworks.lak.database.serializers.ColorSerializer;
+import com.uddernetworks.lak.database.serializers.KeyEnumSerializer;
 import com.uddernetworks.lak.keys.KeyEnum;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.awt.Color;
 import java.util.Arrays;
@@ -15,7 +19,8 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
+@JsonTest
+@ContextConfiguration(classes = KeyEnumSerializer.class)
 class KeyEnumSerializerTest {
 
     @Autowired

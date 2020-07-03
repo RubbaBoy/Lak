@@ -1,4 +1,4 @@
-package com.uddernetworks.lak.pi.api.button;
+package com.uddernetworks.lak.api.button;
 
 /**
  * Additional information bound to each {@link ButtonId} for implementation-specific information regarding it.

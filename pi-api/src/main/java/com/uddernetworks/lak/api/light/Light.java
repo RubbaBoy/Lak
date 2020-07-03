@@ -1,6 +1,8 @@
-package com.uddernetworks.lak.pi.api.light;
+package com.uddernetworks.lak.api.light;
 
-import com.uddernetworks.lak.pi.api.component.PiComponent;
+import com.uddernetworks.lak.api.component.PiComponent;
+
+import java.util.function.Consumer;
 
 public interface Light<T extends AbstractedLight> extends PiComponent<T> {
 
@@ -19,5 +21,4 @@ public interface Light<T extends AbstractedLight> extends PiComponent<T> {
      * @return If the light is on
      */
     boolean getStatus();
-
 }

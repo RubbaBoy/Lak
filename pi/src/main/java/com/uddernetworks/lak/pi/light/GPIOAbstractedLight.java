@@ -1,8 +1,8 @@
 package com.uddernetworks.lak.pi.light;
 
-import com.uddernetworks.lak.pi.api.ComponentNotFoundException;
-import com.uddernetworks.lak.pi.api.light.AbstractedLight;
-import com.uddernetworks.lak.pi.api.light.LightId;
+import com.uddernetworks.lak.api.ComponentNotFoundException;
+import com.uddernetworks.lak.api.light.AbstractedLight;
+import com.uddernetworks.lak.api.light.LightId;
 import com.uddernetworks.lak.pi.button.GPIOAbstractedButton;
 
 import java.util.Arrays;
@@ -14,15 +14,15 @@ public enum GPIOAbstractedLight implements AbstractedLight {
     /**
      * The light inside of the {@link GPIOAbstractedButton#RED}.
      */
-    BUTTON_RED(LightId.RED_BUTTON, "Red Button", 0),
+    BUTTON_RED(LightId.RED_BUTTON, "Red Button", 16),
     /**
      * The light inside of the {@link GPIOAbstractedButton#GREEN}.
      */
-    BUTTON_GREEN(LightId.GREEN_BUTTON, "Green Button", 1),
+    BUTTON_GREEN(LightId.GREEN_BUTTON, "Green Button", 21),
     /**
      * The light inside of the {@link GPIOAbstractedButton#BLUE}.
      */
-    BUTTON_BLUE(LightId.BLUE_BUTTON, "Blue Button", 2);
+    BUTTON_BLUE(LightId.BLUE_BUTTON, "Blue Button", 20);
 
     private final LightId lightId;
     private final int[] gpioPins;

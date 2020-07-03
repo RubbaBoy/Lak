@@ -1,4 +1,4 @@
-package com.uddernetworks.lak.pi.api.light;
+package com.uddernetworks.lak.api.light;
 
 public enum LightId {
     RED_BUTTON,

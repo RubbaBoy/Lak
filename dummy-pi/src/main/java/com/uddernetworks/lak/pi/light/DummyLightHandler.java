@@ -1,12 +1,10 @@
 package com.uddernetworks.lak.pi.light;
 
-import com.uddernetworks.lak.pi.api.ComponentNotFoundException;
-import com.uddernetworks.lak.pi.api.light.AbstractedLight;
-import com.uddernetworks.lak.pi.api.light.Light;
-import com.uddernetworks.lak.pi.api.light.LightHandler;
-import com.uddernetworks.lak.pi.api.light.LightId;
+import com.uddernetworks.lak.api.light.AbstractedLight;
+import com.uddernetworks.lak.api.light.Light;
+import com.uddernetworks.lak.api.light.LightHandler;
+import com.uddernetworks.lak.api.light.LightId;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

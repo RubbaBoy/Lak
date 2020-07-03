@@ -1,7 +1,8 @@
-package com.uddernetworks.lak.pi.api.light;
+package com.uddernetworks.lak.api.light;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 public interface LightHandler<T extends AbstractedLight> {
 

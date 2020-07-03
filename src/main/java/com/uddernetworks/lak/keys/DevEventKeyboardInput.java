@@ -40,7 +40,12 @@ public class DevEventKeyboardInput implements KeyboardInput {
         lock.lock();
         CompletableFuture.runAsync(() -> {
             try {
-                var bruh = new FileInputStream(new File("/dev/input/event0"));
+                var event0 = new File("/dev/input/event0");
+                if (!event0.exists()) {
+                    return;
+                }
+
+                var bruh = new FileInputStream(event0);
                 var read = new byte[24];
                 while (true) {
                     try {

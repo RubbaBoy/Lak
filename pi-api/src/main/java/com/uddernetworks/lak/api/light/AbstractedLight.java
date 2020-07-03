@@ -1,4 +1,4 @@
-package com.uddernetworks.lak.pi.api.light;
+package com.uddernetworks.lak.api.light;
 
 /**
  * Additional information bound to each {@link LightId} for implementation-specific information regarding it.

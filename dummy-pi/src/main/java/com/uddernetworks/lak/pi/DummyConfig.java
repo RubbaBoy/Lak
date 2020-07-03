@@ -1,11 +1,11 @@
 package com.uddernetworks.lak.pi;
 
-import com.uddernetworks.lak.pi.api.PiDetails;
-import com.uddernetworks.lak.pi.api.PiManager;
-import com.uddernetworks.lak.pi.api.button.ButtonHandler;
-import com.uddernetworks.lak.pi.api.light.LightHandler;
-import com.uddernetworks.lak.pi.button.DummyButtonHandler;
+import com.uddernetworks.lak.api.PiDetails;
+import com.uddernetworks.lak.api.PiManager;
+import com.uddernetworks.lak.api.button.ButtonHandler;
+import com.uddernetworks.lak.api.light.LightHandler;
 import com.uddernetworks.lak.pi.light.DummyLightHandler;
+import com.uddernetworks.lak.pi.button.DummyButtonHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -2,17 +2,22 @@ package com.uddernetworks.lak.database;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uddernetworks.lak.database.serializers.soundmodulation.SoundModulationDeserializer;
+import com.uddernetworks.lak.database.serializers.soundmodulation.SoundModulationSerializer;
 import com.uddernetworks.lak.sounds.FileSound;
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundManager;
 import com.uddernetworks.lak.sounds.SoundVariant;
+import com.uddernetworks.lak.sounds.VariableSoundManager;
 import com.uddernetworks.lak.sounds.modulation.ModulationId;
 import com.uddernetworks.lak.sounds.modulation.SoundModulation;
 import com.uddernetworks.lak.sounds.modulation.VolumeModulation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.net.URI;
 import java.util.UUID;

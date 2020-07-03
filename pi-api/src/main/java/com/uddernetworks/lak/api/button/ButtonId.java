@@ -1,4 +1,4 @@
-package com.uddernetworks.lak.pi.api.button;
+package com.uddernetworks.lak.api.button;
 
 public enum ButtonId {
     RED,
