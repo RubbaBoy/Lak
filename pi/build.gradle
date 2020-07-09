@@ -5,23 +5,10 @@ apply plugin: 'java-library'
 
 version = '0.0.1-SNAPSHOT'
 
-repositories {
-    mavenCentral()
-}
-
-task gen(type: Jar){
-    baseName = 'pi'
-    with jar
-}
-jar.dependsOn gen
-
 dependencies {
     api project(':pi-api')
 
-    implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'com.pi4j:pi4j-core:1.2'
     implementation 'com.pi4j:pi4j-device:1.2'
     implementation 'com.pi4j:pi4j-gpio-extension:1.2'
-
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }

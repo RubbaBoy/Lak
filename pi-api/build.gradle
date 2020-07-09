@@ -1,16 +1,4 @@
-apply plugin: 'java'
-
 version = '0.0.1-SNAPSHOT'
-
-task genLak(type: Jar){
-    baseName = 'pi-api'
-    with jar
-}
-jar.dependsOn genLak
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
 }

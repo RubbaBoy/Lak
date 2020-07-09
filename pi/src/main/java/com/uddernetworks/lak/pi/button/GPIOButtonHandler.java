@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class GPIOButtonHandler implements ButtonHandler<GPIOAbstractedButton> {
 
@@ -28,8 +29,10 @@ public class GPIOButtonHandler implements ButtonHandler<GPIOAbstractedButton> {
     @Override
     public void startListening() {
         listening = true;
+
+        // A negation is added because if 'up' is true, the button is not pressed (due to being a toggle button)
         buttons.forEach(button ->
-                pinController.addListener(button.getId().getGpioPin(), button::setPressed));
+                pinController.addListener(button.getId().getGpioPin(), up -> button.setPressed(!up)));
     }
 
     @Override

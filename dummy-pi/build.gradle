@@ -1,30 +1,5 @@
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'java'
-apply plugin: 'java-library'
-
 version = '0.0.1-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
-
-task genLak(type: Jar){
-    baseName = 'dummy-pi'
-    with jar
-}
-jar.dependsOn genLak
 
 dependencies {
     api project(':pi-api')
-
-    implementation 'org.springframework.boot:spring-boot-starter'
-
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
 }

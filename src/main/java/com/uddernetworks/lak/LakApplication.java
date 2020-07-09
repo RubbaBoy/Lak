@@ -52,41 +52,6 @@ public class LakApplication implements ApplicationListener<ApplicationReadyEvent
         this.lightHandler = lightHandler;
     }
 
-//    public LakApplication() throws ClassNotFoundException, IOException {
-//        System.out.println("BREUHHHHHH");
-////        System.out.println(Class.forName("com.uddernetworks.lak.api.PiManager"));
-////        System.out.println(Class.forName("com.uddernetworks.lak.last.Last"));
-////        System.out.println(Class.forName("com.uddernetworks.lak.pi.Hmm"));
-////        System.out.println(Class.forName("com.uddernetworks.lak.pi.Twooo"));
-//
-//        System.out.println("============");
-//
-//
-//        // create scanner and disable default filters (that is the 'false' argument)
-//        final ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
-//// add include filters which matches all the classes (or use your own)
-//        provider.addIncludeFilter(new RegexPatternTypeFilter(Pattern.compile(".*")));
-//
-//// get matching classes defined in the package
-//        final Set<BeanDefinition> classes = provider.findCandidateComponents("com.uddernetworks.lak");
-//
-//// this is how you can load the class type from BeanDefinition instance
-//        for (BeanDefinition bean: classes) {
-//            Class<?> clazz = Class.forName(bean.getBeanClassName());
-//            System.out.println(clazz.getCanonicalName());
-//            // ... do your magic with the class ...
-//        }
-//
-//        System.out.println("============");
-//
-////        System.out.println(Class.forName("com.uddernetworks.lak.pi.PiZeroManager"));
-//
-//        keyboardInput = null;
-//                piManager = null;
-//        buttonHandler = null;
-//                lightHandler = null;
-//    }
-
     public static void main(String[] args) {
         SpringApplication.run(LakApplication.class, args);
     }
@@ -96,6 +61,31 @@ public class LakApplication implements ApplicationListener<ApplicationReadyEvent
         LOGGER.debug("Registering and listening to components...");
         piManager.init();
         piManager.startListening();
+
+        LOGGER.debug("Toggling lights on");
+        lightHandler.getLights().forEach(light -> {
+            light.setStatus(true);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        LOGGER.debug("Toggeling lights off");
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        lightHandler.getLights().forEach(light -> {
+            light.setStatus(false);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
 
         var buttonLights = Map.of(
                 ButtonId.RED, LightId.RED_BUTTON,

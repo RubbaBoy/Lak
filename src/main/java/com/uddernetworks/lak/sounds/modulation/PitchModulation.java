@@ -1,11 +1,11 @@
 package com.uddernetworks.lak.sounds.modulation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jsyn.Synthesizer;
+import com.jsyn.unitgen.VariableRateDataReader;
 import com.uddernetworks.lak.sounds.SoundVariant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.urish.openal.ALException;
-import org.urish.openal.Source;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.Clip;
@@ -16,6 +16,7 @@ import java.util.Map;
 
 import static com.uddernetworks.lak.Utility.clamp;
 import static com.uddernetworks.lak.Utility.copyBuffer;
+import static com.uddernetworks.lak.Utility.mapRange;
 
 /**
  * A modulator to change the pitch of a sound by changing the sample rate
@@ -27,7 +28,7 @@ public class PitchModulation extends SoundModulation {
     @JsonIgnore
     private final SoundVariant soundVariant;
 
-    // The sample rate of the sound from 0.5 - 2
+    // The sample rate of the sound from -1 to 1
     private double pitch = 0;
 
     public PitchModulation(SoundVariant soundVariant) {
@@ -45,9 +46,9 @@ public class PitchModulation extends SoundModulation {
     }
 
     /**
-     * Sets the pitch of the sound.
-     * <br>Range: [0.5 - 2]
-     * <br>Default: 1
+     * Sets the pitch of the sound. -1 slows the sound down by 20x, 1 speeds it up 20x
+     * <br>Range: [-1, 1]
+     * <br>Default: 0
      *
      * @return The pitch of the sound
      */
@@ -64,13 +65,13 @@ public class PitchModulation extends SoundModulation {
      * @return The current {@link PitchModulation}
      */
     public PitchModulation setPitch(double pitch) {
-        this.pitch = clamp(pitch, 0.5, 2);
+        this.pitch = clamp(pitch, -1, 1);
         return this;
     }
 
     @Override
     public void updateFromEndpoint(ModulatorData data) {
-        pitch = clamp(data.<Number>get("pitch", 1D).doubleValue(), 0.5, 2);
+        pitch = clamp(data.<Number>get("pitch", 0D).doubleValue(), -1, 1);
     }
 
     @Override
@@ -85,8 +86,12 @@ public class PitchModulation extends SoundModulation {
     }
 
     @Override
-    public void modulateSound(Source source) throws ALException {
-        source.setPitch((float) pitch);
+    public void modulateSound(Synthesizer synth, VariableRateDataReader player) {
+        var targetMiddle = synth.getFrameRate();
+        var variance = targetMiddle * 0.75;
+        var min = targetMiddle - variance;
+        var max = targetMiddle + variance;
+        player.rate.set(mapRange(pitch, -1, 1, min, max));
     }
 
     @Override

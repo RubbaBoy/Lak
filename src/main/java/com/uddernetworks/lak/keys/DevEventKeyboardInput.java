@@ -1,5 +1,6 @@
 package com.uddernetworks.lak.keys;
 
+import com.uddernetworks.lak.api.ApiConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,7 +43,24 @@ public class DevEventKeyboardInput implements KeyboardInput {
             try {
                 var event0 = new File("/dev/input/event0");
                 if (!event0.exists()) {
-                    return;
+
+                    LOGGER.warn("event0 doesn't exist, going to scheduled presses! {}", ApiConst.huh);
+
+                    while (true) {
+                        LOGGER.debug("Pressing 'A'");
+
+                        try {
+                            keyboardInterceptor.receiveKey(KeyEnum.KEY_A);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException ignored) {
+                            ignored.printStackTrace();
+                        }
+                    }
                 }
 
                 var bruh = new FileInputStream(event0);

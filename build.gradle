@@ -1,32 +1,19 @@
 plugins {
+    id 'java'
+    id 'idea'
+    id 'maven'
     id 'org.springframework.boot' version '2.3.0.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'java'
 }
 
-group = 'com.uddernetworks.lak'
 version = '0.1.0-SNAPSHOT'
 sourceCompatibility = '11'
 
-task genLak(type: Jar){
-    baseName = 'lak'
-    with jar
-}
-jar.dependsOn genLak
-
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
-
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.urish.openal:java-openal:1.0.0'
     implementation 'org.hsqldb:hsqldb:2.5.0'
-
+    implementation 'com.jsyn:jsyn:17.0.0-SNAPSHOT'
 
     implementation project(':pi-api')
     implementation project(':dummy-pi')
@@ -37,11 +24,50 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    developmentOnly 'org.springframework.boot:spring-boot-starter-actuator'
+}
 
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+idea{
+    module {
+        downloadJavadoc = true // defaults to false
+        downloadSources = true
+    }
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    module {
+        inheritOutputDirs = true
+    }
+}
+
+allprojects {
+    apply plugin: 'java'
+
+    group = 'com.uddernetworks.lak'
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    task genJar(type: Jar){
+        baseName = project.name
+        with jar
+    }
+    jar.dependsOn genJar
+}
+
+configure(allprojects - project(':pi-api')) {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter'
+
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
     }
 }
 
@@ -50,10 +76,12 @@ compileJava.inputs.files(processResources)
 configurations {
     testArtifacts.extendsFrom testRuntime
 }
+
 task testJar(type: Jar) {
     classifier "test"
     from sourceSets.test.output
 }
+
 artifacts {
     testArtifacts testJar
 }

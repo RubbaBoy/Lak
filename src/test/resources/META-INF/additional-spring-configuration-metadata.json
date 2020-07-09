@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "lak.test.sounds.playSound",
+      "type": "java.lang.Boolean",
+      "description": "If sounds should be played on the machine. If running on a CI or other server, this should be false as it only slows down tests."
+    }
+  ]
+}

@@ -1,18 +1,10 @@
 package com.uddernetworks.lak;
 
-import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
-import org.springframework.jdbc.core.PreparedStatementSetter;
-import org.springframework.lang.Nullable;
-
 import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class Utility {
 
@@ -20,8 +12,8 @@ public class Utility {
      * Clamps a value between two other inclusive values.
      *
      * @param value The value to clamp and return
-     * @param min The minimum value allowed
-     * @param max The maximum value allowed
+     * @param min   The minimum value allowed
+     * @param max   The maximum value allowed
      * @return The clamped value
      */
     public static float clamp(float value, float min, float max) {
@@ -32,12 +24,41 @@ public class Utility {
      * Clamps a value between two other inclusive values.
      *
      * @param value The value to clamp and return
-     * @param min The minimum value allowed
-     * @param max The maximum value allowed
+     * @param min   The minimum value allowed
+     * @param max   The maximum value allowed
      * @return The clamped value
      */
     public static double clamp(double value, double min, double max) {
         return Math.max(min, Math.min(max, value));
+    }
+
+    /**
+     * Maps a value within the range of [valueMin, valueMax] to [targetMin, targetMax]
+     * Works identically to {@link #mapRange(double, double, double, double, double)} but floors the result as an int.
+     *
+     * @param value     The given value to change
+     * @param valueMin  The minimum value the given value can be
+     * @param valueMax  The maximum value the given value can be
+     * @param targetMin The minimum the mapped value can be
+     * @param targetMax The maximum the mapped value can be
+     * @return The mapped value, inclusively within targetMin and targetMax
+     */
+    public static int mapRange(int value, int valueMin, int valueMax, int targetMin, int targetMax) {
+        return (int) ((value - valueMin) / (double) (valueMax - valueMin) * (double) (targetMax - targetMin) + targetMin);
+    }
+
+    /**
+     * Maps a value within the range of [valueMin, valueMax] to [targetMin, targetMax]
+     *
+     * @param value     The given value to change
+     * @param valueMin  The minimum value the given value can be
+     * @param valueMax  The maximum value the given value can be
+     * @param targetMin The minimum the mapped value can be
+     * @param targetMax The maximum the mapped value can be
+     * @return The mapped value, inclusively within targetMin and targetMax
+     */
+    public static double mapRange(double value, double valueMin, double valueMax, double targetMin, double targetMax) {
+        return (value - valueMin) / (valueMax - valueMin) * (targetMax - targetMin) + targetMin;
     }
 
     /**
@@ -68,7 +89,7 @@ public class Utility {
     /**
      * Gets an integer of a pair of hex values at a given offset. Used internally for {@link #colorFromHex(String)}
      *
-     * @param hex The full hex value
+     * @param hex   The full hex value
      * @param index The index of the hex value pair. For example, 0 would be the first two characters of hex, 1 would be
      *              the third and fourth characters, and so on.
      * @return The parsed integer

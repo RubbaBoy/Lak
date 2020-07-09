@@ -1,6 +1,8 @@
 package com.uddernetworks.lak.sounds.modulation;
 
 import com.uddernetworks.lak.sounds.SoundVariant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +10,8 @@ import java.util.Optional;
 
 @Component("defaultModulationManager")
 public class DefaultModulationManager implements ModulationManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultModulationManager.class);
 
     private final SoundModulationFactory modulationFactory;
 
@@ -23,6 +27,7 @@ public class DefaultModulationManager implements ModulationManager {
 
         if (modulatorOptional.isPresent()) {
             var modulator = modulatorOptional.get();
+            LOGGER.error("Updating modulator! {}", data.getData());
             modulator.updateFromEndpoint(data);
             return modulatorOptional;
         } else {

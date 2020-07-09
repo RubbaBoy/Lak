@@ -1,11 +1,11 @@
 package com.uddernetworks.lak.sounds.modulation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jsyn.Synthesizer;
+import com.jsyn.unitgen.VariableRateDataReader;
 import com.uddernetworks.lak.sounds.SoundVariant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.urish.openal.ALException;
-import org.urish.openal.Source;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.Clip;
@@ -17,6 +17,7 @@ import java.util.Map;
 
 import static com.uddernetworks.lak.Utility.clamp;
 import static com.uddernetworks.lak.Utility.copyBuffer;
+import static com.uddernetworks.lak.Utility.mapRange;
 
 /**
  * A modulator to change the pitch of a sound.
@@ -28,7 +29,7 @@ public class VolumeModulation extends SoundModulation {
     @JsonIgnore
     private final SoundVariant soundVariant;
 
-    // The change in volume of the sound from 0.0 - ?
+    // The change in volume of the sound from 0.0 - 1
     private double volume = 0;
 
     public VolumeModulation(SoundVariant soundVariant) {
@@ -65,13 +66,13 @@ public class VolumeModulation extends SoundModulation {
      * @return The current {@link PitchModulation}
      */
     public VolumeModulation setVolume(double volume) {
-        this.volume = clamp(volume, 0, 1000000);
+        this.volume = clamp(volume, 0, 1);
         return this;
     }
 
     @Override
     public void updateFromEndpoint(ModulatorData data) {
-        volume = clamp(data.<Number>get("volume", 1D).doubleValue(), 0, 1000000);
+        volume = clamp(data.<Number>get("volume", 1D).doubleValue(), 0, 1);
     }
 
     @Override
@@ -86,8 +87,10 @@ public class VolumeModulation extends SoundModulation {
     }
 
     @Override
-    public void modulateSound(Source source) throws ALException {
-        source.setGain((float) volume);
+    public void modulateSound(Synthesizer synth, VariableRateDataReader player) {
+        // TODO: Is max amplitude really default?
+        LOGGER.debug("Current amplitude {} range: [{}, {}]", player.amplitude.get(), player.amplitude.getMinimum(), player.amplitude.getMaximum());
+        player.amplitude.set(mapRange(volume, 0, 1, player.amplitude.getMinimum(), player.amplitude.getMaximum()));
     }
 
     @Override

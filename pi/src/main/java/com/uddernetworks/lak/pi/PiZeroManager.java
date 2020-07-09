@@ -36,10 +36,6 @@ public class PiZeroManager implements PiManager {
         this.lightFactory = lightFactory;
     }
 
-    public static String bruh() {
-        return "hhuhuhuhuhuuhuuuuu";
-    }
-
     @Override
     public void init() {
         LOGGER.debug("Registering components...");
@@ -59,6 +55,7 @@ public class PiZeroManager implements PiManager {
 
     @Override
     public void startListening() {
+        LOGGER.debug("Start listening...");
         buttonHandler.startListening();
     }
 }
