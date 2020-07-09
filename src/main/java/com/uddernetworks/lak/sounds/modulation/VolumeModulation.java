@@ -29,8 +29,8 @@ public class VolumeModulation extends SoundModulation {
     @JsonIgnore
     private final SoundVariant soundVariant;
 
-    // The change in volume of the sound from 0.0 - 1
-    private double volume = 0;
+    // The change in volume of the sound from 0.0 - 1.0
+    private float volume = 0;
 
     public VolumeModulation(SoundVariant soundVariant) {
         this.soundVariant = soundVariant;
@@ -48,31 +48,31 @@ public class VolumeModulation extends SoundModulation {
 
     /**
      * Sets the volume of the sound.
-     * <br>Range: [0.0 - ?]
-     * <br>Default: 1
+     * <br>Range: [0.0, 1.0]
+     * <br>Default: 1.0
      *
      * @return The volume of the sound
      */
-    public double getVolume() {
+    public float getVolume() {
         return volume;
     }
 
     /**
      * Sets the volume of the sound.
-     * <br>Range: [0.0 - ?]
-     * <br>Default: 1
+     * <br>Range: [0.0, 1.0]
+     * <br>Default: 1.0
      *
      * @param volume The volume of the sound to set
      * @return The current {@link PitchModulation}
      */
-    public VolumeModulation setVolume(double volume) {
+    public VolumeModulation setVolume(float volume) {
         this.volume = clamp(volume, 0, 1);
         return this;
     }
 
     @Override
     public void updateFromEndpoint(ModulatorData data) {
-        volume = clamp(data.<Number>get("volume", 1D).doubleValue(), 0, 1);
+        volume = clamp(data.<Number>get("volume", 1F).floatValue(), 0, 1);
     }
 
     @Override
@@ -88,7 +88,6 @@ public class VolumeModulation extends SoundModulation {
 
     @Override
     public void modulateSound(Synthesizer synth, VariableRateDataReader player) {
-        // TODO: Is max amplitude really default?
         LOGGER.debug("Current amplitude {} range: [{}, {}]", player.amplitude.get(), player.amplitude.getMinimum(), player.amplitude.getMaximum());
         player.amplitude.set(mapRange(volume, 0, 1, player.amplitude.getMinimum(), player.amplitude.getMaximum()));
     }
@@ -96,7 +95,7 @@ public class VolumeModulation extends SoundModulation {
     @Override
     public byte[] serialize() {
         var output = copyBuffer(super.serialize(), 32);
-        output.putFloat((float) volume);
+        output.putFloat(volume);
         return output.array();
     }
 

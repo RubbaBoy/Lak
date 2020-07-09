@@ -1,6 +1,8 @@
 package com.uddernetworks.lak.sounds.modulation;
 
 import com.uddernetworks.lak.sounds.SoundVariant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.nio.ByteBuffer;

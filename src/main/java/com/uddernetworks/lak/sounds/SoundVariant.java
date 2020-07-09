@@ -6,6 +6,7 @@ import com.uddernetworks.lak.sounds.modulation.SoundModulation;
 
 import java.awt.Color;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -89,6 +90,7 @@ public interface SoundVariant {
      * Removes a given {@link SoundModulation} by its {@link ModulationId} if it has already been added or set.
      *
      * @param modulationId The {@link ModulationId} to remove
+     * @return The {@link SoundModulation} removed, if any
      */
-    void removeModulator(ModulationId modulationId);
+    Optional<SoundModulation> removeModulator(ModulationId modulationId);
 }

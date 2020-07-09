@@ -28,8 +28,8 @@ public class PitchModulation extends SoundModulation {
     @JsonIgnore
     private final SoundVariant soundVariant;
 
-    // The sample rate of the sound from -1 to 1
-    private double pitch = 0;
+    // The sample rate of the sound from -1.0 to 1.0
+    private float pitch = 0;
 
     public PitchModulation(SoundVariant soundVariant) {
         this.soundVariant = soundVariant;
@@ -47,31 +47,31 @@ public class PitchModulation extends SoundModulation {
 
     /**
      * Sets the pitch of the sound. -1 slows the sound down by 20x, 1 speeds it up 20x
-     * <br>Range: [-1, 1]
-     * <br>Default: 0
+     * <br>Range: [-1.0, 1.0]
+     * <br>Default: 0.0
      *
      * @return The pitch of the sound
      */
-    public double getPitch() {
+    public float getPitch() {
         return pitch;
     }
 
     /**
-     * Sets the pitch of the sound.
-     * <br>Range: [0.5 - 2]
-     * <br>Default: 1
+     * Sets the pitch of the sound. -1 slows the sound down by 20x, 1 speeds it up 20x
+     * <br>Range: [-1.0, 1.0]
+     * <br>Default: 0.0
      *
      * @param pitch The pitch of the sound to set
      * @return The current {@link PitchModulation}
      */
-    public PitchModulation setPitch(double pitch) {
+    public PitchModulation setPitch(float pitch) {
         this.pitch = clamp(pitch, -1, 1);
         return this;
     }
 
     @Override
     public void updateFromEndpoint(ModulatorData data) {
-        pitch = clamp(data.<Number>get("pitch", 0D).doubleValue(), -1, 1);
+        pitch = clamp(data.<Number>get("pitch", 0F).floatValue(), -1, 1);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class PitchModulation extends SoundModulation {
     @Override
     public byte[] serialize() {
         var output = copyBuffer(super.serialize(), 32);
-        output.putFloat((float) pitch);
+        output.putFloat(pitch);
         return output.array();
     }
 

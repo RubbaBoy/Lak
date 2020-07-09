@@ -25,10 +25,10 @@ CREATE TABLE IF NOT EXISTS `sound_variants` (
 );
 
 CREATE TABLE IF NOT EXISTS `modulators` (
-    `modulation_id` int        NOT NULL,
-    `value`         int        NOT NULL,
-    `variant_id`    binary(16) NOT NULL,
+    `modulation_id` int             NOT NULL,
+    `value`         varbinary(2048) NOT NULL,
+    `variant_id`    binary(16)      NOT NULL,
 
-    PRIMARY KEY (`modulation_id`),
+    PRIMARY KEY (`variant_id`, `modulation_id`),
     CONSTRAINT `mod_const` FOREIGN KEY (`variant_id`) REFERENCES `sound_variants` (`variant_id`)
 );

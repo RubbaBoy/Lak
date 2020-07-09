@@ -74,7 +74,7 @@ class AuxSoundPlayerTest {
         sleep(SOUND_DURATION);
 
         var variant = soundManager.getAllSoundVariants().get(0);
-        variant.addModulator(new PitchModulation(variant).setPitch(1.5));
+        variant.addModulator(new PitchModulation(variant).setPitch(1.5F));
 
         if (playSound) {
             LOGGER.info("Playing pitch-shifted sound...");
@@ -92,7 +92,7 @@ class AuxSoundPlayerTest {
         sleep(SOUND_DURATION);
 
         var variant = soundManager.getAllSoundVariants().get(0);
-        variant.addModulator(new VolumeModulation(variant).setVolume(0.25));
+        variant.addModulator(new VolumeModulation(variant).setVolume(0.25F));
 
         if (playSound) {
             LOGGER.info("Playing sound at 25% volume...");

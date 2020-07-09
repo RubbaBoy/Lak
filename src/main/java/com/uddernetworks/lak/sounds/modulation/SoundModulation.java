@@ -61,8 +61,8 @@ public abstract class SoundModulation {
      * @return The serialized Long
      */
     public byte[] serialize() {
-        var output = ByteBuffer.allocate(2);
-        output.putShort(getId().getId());
+        var output = ByteBuffer.allocate(1);
+        output.put(getId().getId());
         return output.array();
     }
 }

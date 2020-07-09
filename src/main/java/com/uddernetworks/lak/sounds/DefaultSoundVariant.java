@@ -2,18 +2,23 @@ package com.uddernetworks.lak.sounds;
 
 import com.uddernetworks.lak.sounds.modulation.ModulationId;
 import com.uddernetworks.lak.sounds.modulation.SoundModulation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
  * Stored in the sound_variant table
  */
 public class DefaultSoundVariant implements SoundVariant {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSoundVariant.class);
 
     private final UUID id;
     private Sound sound;
@@ -84,12 +89,15 @@ public class DefaultSoundVariant implements SoundVariant {
 
     @Override
     public void addModulator(SoundModulation soundModulation) {
+        LOGGER.debug("Adding modulato to variant: {}", soundModulation);
         soundModulators.add(soundModulation);
     }
 
     @Override
-    public void removeModulator(ModulationId modulationId) {
-        soundModulators.removeIf(modulator -> modulator.getId() == modulationId);
+    public Optional<SoundModulation> removeModulator(ModulationId modulationId) {
+        var removing = soundModulators.stream().filter(modulator -> modulator.getId() == modulationId).findFirst();
+        removing.ifPresent(soundModulators::remove);
+        return removing;
     }
 
     @Override
