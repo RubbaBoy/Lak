@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.awt.Color;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,9 +29,17 @@ public class VariableSoundManager implements SoundManager {
     private final SoundRepository soundRepository;
     private final List<Sound> sounds = new ArrayList<>();
     private final List<SoundVariant> soundVariants = new ArrayList<>();
+    private final Path soundPath;
 
     public VariableSoundManager(@Qualifier("sqlSoundRepository") SoundRepository soundRepository) {
         this.soundRepository = soundRepository;
+        this.soundPath = Paths.get(System.getenv("SOUND_PATH"));
+    }
+
+    @Override
+    public Path convertSoundPath(String relativePath) {
+        LOGGER.debug("Converting sound path '{}' with root '{}' result: '{}'", relativePath, soundPath.toAbsolutePath(), soundPath.resolve(relativePath));
+        return soundPath.resolve(relativePath);
     }
 
     @Override

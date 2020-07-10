@@ -57,7 +57,7 @@ public class SoundController {
     @PostMapping(path = "/addSound", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public @ResponseBody
     Sound addSound(@RequestBody SoundEndpointBodies.AddingSound addingSound) {
-        var sound = new FileSound(UUID.randomUUID(), URI.create(addingSound.getURI()));
+        var sound = new FileSound(UUID.randomUUID(), addingSound.getRelPath());
         soundManager.addSound(sound);
         return sound;
     }

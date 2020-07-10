@@ -87,5 +87,6 @@ artifacts {
 }
 
 test {
+    environment 'SOUND_PATH', 'src/test/resources/sounds'
     useJUnitPlatform()
 }

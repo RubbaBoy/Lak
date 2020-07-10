@@ -37,7 +37,7 @@ public class MySQLSoundRepository implements SoundRepository {
         return CompletableFuture.runAsync(() ->
                 jdbc.execute("INSERT INTO `sounds` VALUES (?, ?);", executeArgs(
                         Utility.getBytesFromUUID(sound.getId()),
-                        sound.getURI().toString()
+                        sound.getRelativePath()
                 )));
     }
 

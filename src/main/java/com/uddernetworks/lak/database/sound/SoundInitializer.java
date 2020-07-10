@@ -48,7 +48,7 @@ public class SoundInitializer implements RepositoryInitializer {
         LOGGER.debug("Initializing sounds");
 
         soundManager.setSounds(jdbc.query("SELECT * FROM `sounds`;", (rs, index) ->
-                new FileSound(getUUIDFromBytes(rs.getBytes("sound_id")), URI.create(rs.getString("path")))));
+                new FileSound(getUUIDFromBytes(rs.getBytes("sound_id")), rs.getString("path"))));
 
         soundManager.setVariants(jdbc.query("SELECT * FROM `sound_variants`;", (rs, index) ->
                 new DefaultSoundVariant(getUUIDFromBytes(rs.getBytes("variant_id")),
@@ -72,7 +72,7 @@ public class SoundInitializer implements RepositoryInitializer {
         var soundSize = soundManager.getAllSounds().size();
         if (soundSize == 0) {
             LOGGER.debug("No sounds loaded, adding a default one");
-            var sound = new FileSound(UUID.randomUUID(), Paths.get("E:/lak/sounds/elliot.wav").toUri());
+            var sound = new FileSound(UUID.randomUUID(), "elliot.wav");
             soundManager.addSound(sound);
             var variant = soundManager.addSoundVariant(sound);
             LOGGER.debug("Created sound {} and variant {}", sound.getId(), variant.getId());

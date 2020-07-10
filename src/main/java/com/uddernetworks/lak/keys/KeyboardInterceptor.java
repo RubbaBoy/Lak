@@ -1,6 +1,6 @@
 package com.uddernetworks.lak.keys;
 
-import com.uddernetworks.lak.sounds.SoundPlayer;
+import com.uddernetworks.lak.sounds.output.SoundPlayer;
 
 /**
  * Receives key inputs from a {@link KeyboardInput} and sends it to the {@link KeyboardOutput} and {@link SoundPlayer}.

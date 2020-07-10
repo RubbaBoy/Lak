@@ -20,9 +20,9 @@ public interface Sound {
     UUID getId();
 
     /**
-     * The path of the filesystem where the sound is located.
+     * The path relative to the sound base where the sound is located.
      *
-     * @return The path of the sound
+     * @return The relative path of the sound
      */
-    URI getURI();
+    String getRelativePath();
 }

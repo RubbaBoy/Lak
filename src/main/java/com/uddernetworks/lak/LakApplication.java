@@ -1,5 +1,6 @@
 package com.uddernetworks.lak;
 
+import com.uddernetworks.lak.hardware.ButtonInterface;
 import com.uddernetworks.lak.keys.KeyboardInput;
 import com.uddernetworks.lak.api.PiManager;
 import com.uddernetworks.lak.api.button.AbstractedButton;
@@ -39,15 +40,18 @@ public class LakApplication implements ApplicationListener<ApplicationReadyEvent
 
     private final KeyboardInput keyboardInput;
     private final PiManager piManager;
+    private final ButtonInterface buttonInterface;
     private final ButtonHandler<AbstractedButton> buttonHandler;
     private final LightHandler<AbstractedLight> lightHandler;
 
     public LakApplication(@Qualifier("devEventKeyboardInput") KeyboardInput keyboardInput,
                           PiManager piManager,
+                          ButtonInterface buttonInterface,
                           ButtonHandler<AbstractedButton> buttonHandler,
                           LightHandler<AbstractedLight> lightHandler) {
         this.keyboardInput = keyboardInput;
         this.piManager = piManager;
+        this.buttonInterface = buttonInterface;
         this.buttonHandler = buttonHandler;
         this.lightHandler = lightHandler;
     }
@@ -59,49 +63,12 @@ public class LakApplication implements ApplicationListener<ApplicationReadyEvent
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.debug("Registering and listening to components...");
+
         piManager.init();
         piManager.startListening();
 
-        LOGGER.debug("Toggling lights on");
-        lightHandler.getLights().forEach(light -> {
-            light.setStatus(true);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        LOGGER.debug("Toggeling lights off");
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        lightHandler.getLights().forEach(light -> {
-            light.setStatus(false);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        var buttonLights = Map.of(
-                ButtonId.RED, LightId.RED_BUTTON,
-                ButtonId.GREEN, LightId.GREEN_BUTTON,
-                ButtonId.BLUE, LightId.BLUE_BUTTON
-        );
-
-        buttonHandler.getButtons().forEach(button ->
-                button.setListener(pressed -> {
-                    LOGGER.info("[{}] Pressed: {}", button.getName(), pressed);
-                    lightHandler.lightFromId(buttonLights.get(button.getId().getId())).ifPresent(light ->
-                            light.setStatus(pressed));
-                }));
-
-        var redButton = buttonHandler.buttonFromId(ButtonId.RED);
-        LOGGER.debug("Button = {}", redButton);
+        LOGGER.debug("Initializing button interface");
+        buttonInterface.init();
 
         LOGGER.info("Listening for keyboard events...");
         keyboardInput.startListening();

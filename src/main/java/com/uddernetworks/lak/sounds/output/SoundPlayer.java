@@ -1,4 +1,4 @@
-package com.uddernetworks.lak.sounds;
+package com.uddernetworks.lak.sounds.output;
 
 import com.uddernetworks.lak.keys.KeyEnum;
 

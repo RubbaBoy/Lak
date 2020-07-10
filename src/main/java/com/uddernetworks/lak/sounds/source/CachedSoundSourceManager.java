@@ -2,9 +2,11 @@ package com.uddernetworks.lak.sounds.source;
 
 import com.jsyn.data.AudioSample;
 import com.jsyn.util.SampleLoader;
+import com.uddernetworks.lak.sounds.SoundManager;
 import com.uddernetworks.lak.sounds.SoundVariant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -13,22 +15,37 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+// TODO: Test
 @Component("cachedSoundSourceManager")
 public class CachedSoundSourceManager implements SoundSourceManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CachedSoundSourceManager.class);
 
     private final Map<UUID, AudioSample> sources = new ConcurrentHashMap<>();
+    private final SoundManager soundManager;
 
-    public CachedSoundSourceManager() {
+    public CachedSoundSourceManager(@Qualifier("variableSoundManager") SoundManager soundManager) {
+        this.soundManager = soundManager;
+        LOGGER.debug("sopund manager = {}", soundManager);
         SampleLoader.setJavaSoundPreferred(false);
     }
 
     @Override
     public Optional<AudioSample> getOrCreate(SoundVariant soundVariant) {
+        System.out.println("wtffffffffffff");
+        LOGGER.debug("beforeeeeeee");
+        LOGGER.debug("sources = {}", sources);
+        System.out.println("soundVariant = " + soundVariant);
         return Optional.ofNullable(sources.computeIfAbsent(soundVariant.getId(), $ -> {
             try {
-                return SampleLoader.loadFloatSample(soundVariant.getSound().getURI().toURL());
+                LOGGER.debug("hereeeee {}", soundManager);
+                System.out.println("soundVariant = " + soundVariant);
+                System.out.println("soundVariant.getSound() = " + soundVariant.getSound());
+                System.out.println("soundVariant.getSound().getRelativePath() = " + soundVariant.getSound().getRelativePath());
+                System.out.println("last = " + soundManager.convertSoundPath(soundVariant.getSound().getRelativePath()));
+                var file = soundManager.convertSoundPath(soundVariant.getSound().getRelativePath()).toFile();
+                LOGGER.debug("file = {}", file);
+                return SampleLoader.loadFloatSample(file);
             } catch (IOException e) {
                 LOGGER.error("An error occurred while trying to load the audio file for " + soundVariant, e);
                 return null;

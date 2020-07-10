@@ -3,6 +3,7 @@ package com.uddernetworks.lak.sounds;
 import com.uddernetworks.lak.database.sound.SoundRepository;
 import com.uddernetworks.lak.rest.sound.SoundEndpointBodies;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,6 +12,14 @@ import java.util.UUID;
  * Manages the storage of {@link Sound}s and {@link SoundVariant}s.
  */
 public interface SoundManager {
+
+    /**
+     * Converts a relative path (Via {@link Sound#getRelativePath()} to an absolute path to get the sound from.
+     *
+     * @param relativePath The relative path of the sound
+     * @return The absolute file path
+     */
+    Path convertSoundPath(String relativePath);
 
     /**
      * Gets all {@link Sound}s.

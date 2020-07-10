@@ -10,11 +10,11 @@ import java.util.UUID;
 public class FileSound implements Sound {
 
     private final UUID id;
-    private final URI uri;
+    private final String relPath;
 
-    public FileSound(UUID id, URI uri) {
+    public FileSound(UUID id, String relPath) {
         this.id = id;
-        this.uri = uri;
+        this.relPath = relPath;
     }
 
     @Override
@@ -23,15 +23,15 @@ public class FileSound implements Sound {
     }
 
     @Override
-    public URI getURI() {
-        return uri;
+    public String getRelativePath() {
+        return relPath;
     }
 
     @Override
     public String toString() {
         return "FileSound{" +
                 "id=" + id +
-                ", uri=" + uri +
+                ", relPath=" + relPath +
                 '}';
     }
 }

@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SoundControllerTest {
 
-    private static final URI SOUND_URI = URI.create("/path/here.mp3");
+    private static final String SOUND_URI = "here.mp3";
 
     private static HttpHeaders headers;
 
@@ -99,7 +99,7 @@ public class SoundControllerTest {
         for (var sound : result) {
             // Ensure the set ID and URI match the set values
             var id = sound.getId();
-            var uri = sound.getURI();
+            var uri = sound.getRelativePath();
 
             assertTrue(uuids.contains(id));
             assertEquals(SOUND_URI, uri);
@@ -144,7 +144,7 @@ public class SoundControllerTest {
 
         // Get the returned data from the request
         var soundUUID = created.getId();
-        var path = created.getURI();
+        var path = created.getRelativePath();
 
         var result = jdbc.query("SELECT * FROM `sounds` WHERE `sound_id` = ?;", queryArgs((Object) Utility.getBytesFromUUID(soundUUID)), ResultList::new);
 
@@ -153,7 +153,7 @@ public class SoundControllerTest {
         assertTrue(result.hasNext());
         result.next();
         assertEquals(soundUUID, Utility.getUUIDFromBytes(result.get(0)));
-        assertEquals(path.toString(), result.get(1));
+        assertEquals(path, result.get(1));
     }
 
     @Test
@@ -169,14 +169,14 @@ public class SoundControllerTest {
         // Get the returned data from the request
         var fetchedSound = variant.getSound();
         var jsonUUID = fetchedSound.getId();
-        var jsonURI = fetchedSound.getURI();
+        var jsonURI = fetchedSound.getRelativePath();
 
         // Ensure it was actually created
         assertTrue(soundManager.isSoundVariantAdded(variant.getId()));
 
         // Ensure it matches the data started off with/manually added
         assertEquals(soundUUID, jsonUUID);
-        assertEquals(sound.getURI(), jsonURI);
+        assertEquals(sound.getRelativePath(), jsonURI);
     }
 
     @Test

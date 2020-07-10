@@ -40,7 +40,7 @@ class SoundModulationSerializerTest {
         var variant = addDatabaseSoundVariant(sound);
 
         var volume = new VolumeModulation(variant);
-        volume.setVolume(0.45);
+        volume.setVolume(0.45F);
 
         var path = objectMapper.writeValueAsString(volume);
         assertEquals("{\"id\":" + ModulationId.VOLUME.getId() + ",\"variant\":\"" + variant.getId() + "\",\"value\":{\"volume\":0.45}}", path);
@@ -63,7 +63,7 @@ class SoundModulationSerializerTest {
     }
 
     private Sound addDatabaseSound(UUID soundUUID) {
-        var sound = new FileSound(soundUUID, URI.create(""));
+        var sound = new FileSound(soundUUID, "");
         soundManager.addSound(sound);
         return sound;
     }

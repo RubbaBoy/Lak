@@ -8,20 +8,22 @@ import java.util.UUID;
 
 public class SoundEndpointBodies {
     public static class AddingSound {
-        private String uri;
+        // The sub-path within the base path. e.g. if base was C:/foo and this was bar, the absolute path would be
+        // C:/foo/bar
+        private String relPath;
 
-        public String getURI() {
-            return uri;
+        public String getRelPath() {
+            return relPath;
         }
 
-        public void setURI(String uri) {
-            this.uri = uri;
+        public void setRelPath(String relPath) {
+            this.relPath = relPath;
         }
 
         @Override
         public String toString() {
             return "AddingSound{" +
-                    "uri='" + uri + '\'' +
+                    "uri='" + relPath + '\'' +
                     '}';
         }
     }
