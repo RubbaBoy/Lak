@@ -21,4 +21,11 @@ public interface Light<T extends AbstractedLight> extends PiComponent<T> {
      * @return If the light is on
      */
     boolean getStatus();
+
+    /**
+     * Pulses the light for a given amount of milliseconds.
+     *
+     * @param millis The milliseconds for the light to be on for.
+     */
+    void pulse(long millis);
 }

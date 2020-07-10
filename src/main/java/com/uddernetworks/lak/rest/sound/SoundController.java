@@ -7,6 +7,7 @@ import com.uddernetworks.lak.sounds.FileSound;
 import com.uddernetworks.lak.sounds.Sound;
 import com.uddernetworks.lak.sounds.SoundManager;
 import com.uddernetworks.lak.sounds.SoundVariant;
+import com.uddernetworks.lak.sounds.input.Recording;
 import com.uddernetworks.lak.sounds.modulation.ModulationManager;
 import com.uddernetworks.lak.sounds.modulation.ModulatorData;
 import com.uddernetworks.lak.sounds.modulation.SoundModulation;
@@ -35,11 +36,14 @@ public class SoundController {
 
     private final SoundManager soundManager;
     private final ModulationManager modulationManager;
+    private final Recording recording;
 
     public SoundController(@Qualifier("variableSoundManager") SoundManager soundManager,
-                           @Qualifier("defaultModulationManager") ModulationManager modulationManager) {
+                           @Qualifier("defaultModulationManager") ModulationManager modulationManager,
+                           @Qualifier("webButtonRecording") Recording recording) {
         this.soundManager = soundManager;
         this.modulationManager = modulationManager;
+        this.recording = recording;
     }
 
     @GetMapping(path = "/list")
@@ -60,6 +64,13 @@ public class SoundController {
         var sound = new FileSound(UUID.randomUUID(), addingSound.getRelPath());
         soundManager.addSound(sound);
         return sound;
+    }
+
+    @PostMapping(path = "/recordSound", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public @ResponseBody
+    Map<String, String> recordSound(@RequestBody SoundEndpointBodies.RecordingSound recordingSound) {
+        recording.prepareRecording(recordingSound.getName());
+        return Map.of("status", "ok");
     }
 
     @PostMapping(path = "/addVariant", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})

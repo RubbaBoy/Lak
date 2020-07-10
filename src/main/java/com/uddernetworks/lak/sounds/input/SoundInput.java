@@ -15,10 +15,10 @@ public interface SoundInput {
     void startRecording(String name) throws IOException;
 
     /**
-     * Stops the recording of the sound and returns the {@link Path} of the file.
+     * Stops the recording of the sound and returns the relative path of the file.
      *
-     * @return The {@link Path} of the file
+     * @return The relative path of the file
      * @throws IOException If an exception occurs
      */
-    Path stopRecording() throws IOException;
+    String stopRecording() throws IOException;
 }

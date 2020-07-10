@@ -27,7 +27,7 @@ public class AuxSoundInput implements SoundInput {
     private String recordingName;
     private Synthesizer synth;
     private WaveRecorder recorder;
-    private Path recordingPath;
+    private String relativePath;
 
     public AuxSoundInput(@Qualifier("cachedJSynPool") JSynPool jSynPool,
                          @Qualifier("variableSoundManager") SoundManager soundManager) {
@@ -38,7 +38,8 @@ public class AuxSoundInput implements SoundInput {
     @Override
     public void startRecording(String name) throws IOException {
         synth = JSyn.createSynthesizer();
-        recordingPath = soundManager.convertSoundPath(name.replaceAll("[^a-zA-Z0-9]", "") + ".wav");
+        relativePath = name.replaceAll("[^a-zA-Z0-9]", "") + ".wav";
+        var recordingPath = soundManager.convertSoundPath(relativePath);
         recorder = new WaveRecorder(synth, recordingPath.toFile());
 
         LOGGER.debug("Recording {} to {}", name, recordingPath.toAbsolutePath());
@@ -54,10 +55,10 @@ public class AuxSoundInput implements SoundInput {
     }
 
     @Override
-    public Path stopRecording() throws IOException {
+    public String stopRecording() throws IOException {
         recorder.stop();
         recorder.close();
         synth.stop();
-        return recordingPath;
+        return relativePath;
     }
 }

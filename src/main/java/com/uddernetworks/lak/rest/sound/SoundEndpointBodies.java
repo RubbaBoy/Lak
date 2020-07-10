@@ -28,6 +28,25 @@ public class SoundEndpointBodies {
         }
     }
 
+    public static class RecordingSound {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return "RecordingSound{" +
+                    "name='" + name + '\'' +
+                    '}';
+        }
+    }
+
     public static class AddingVariant {
         private String name;
         private UUID soundId;

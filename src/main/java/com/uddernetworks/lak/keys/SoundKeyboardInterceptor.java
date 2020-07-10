@@ -13,6 +13,7 @@ public class SoundKeyboardInterceptor implements KeyboardInterceptor {
 
     private final SoundPlayer soundPlayer;
     private final KeyboardOutput keyboardOutput;
+    private boolean soundEnabled = true;
 
     public SoundKeyboardInterceptor(@Qualifier("auxSoundPlayer") SoundPlayer soundPlayer,
                                     @Qualifier("usbKeyboardOutput") KeyboardOutput keyboardOutput) {
@@ -23,8 +24,22 @@ public class SoundKeyboardInterceptor implements KeyboardInterceptor {
     @Override
     public void receiveKey(KeyEnum keyEnum) {
         LOGGER.debug("Playing sound for {}", keyEnum);
-        soundPlayer.playSound(keyEnum);
+
+        if (soundEnabled) {
+            soundPlayer.playSound(keyEnum);
+        }
+
         keyboardOutput.outputKey(keyEnum);
+    }
+
+    @Override
+    public void setSoundEnabled(boolean soundEnabled) {
+        this.soundEnabled = soundEnabled;
+    }
+
+    @Override
+    public boolean isSoundEnabled() {
+        return soundEnabled;
     }
 
 }

@@ -13,4 +13,18 @@ public interface KeyboardInterceptor {
      * @param keyEnum The {@link KeyEnum} being received
      */
     void receiveKey(KeyEnum keyEnum);
+
+    /**
+     * Sets the sound to be enabled/disabled.
+     *
+     * @param soundEnabled If the sound should be enabled
+     */
+    void setSoundEnabled(boolean soundEnabled);
+
+    /**
+     * Returns if the sound is enabled.
+     *
+     * @return If the sound is enabled
+     */
+    boolean isSoundEnabled();
 }
