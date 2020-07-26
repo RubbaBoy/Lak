@@ -46,9 +46,6 @@ public class AuxSoundPlayer implements SoundPlayer {
 
         LOGGER.debug("Playing sound {}", sound.getId());
 
-        LOGGER.debug("anotyher");
-        System.out.println("soundSourceManager = " + soundSourceManager);
-        System.out.println("soundVariant = " + soundVariant);
         var sourceOptional = soundSourceManager.getOrCreate(soundVariant);
         if (sourceOptional.isEmpty()) {
             LOGGER.error("Sound for {} unavailable, skipping", soundVariant);
@@ -57,14 +54,8 @@ public class AuxSoundPlayer implements SoundPlayer {
 
         var sample = sourceOptional.get();
 
-        jSynPool.provisionAsyncSynth(synth -> {
+        jSynPool.provisionAsyncSynth((synth, lineOut) -> {
             try {
-                // Add an output mixer.
-                LineOut lineOut;
-                synth.add(lineOut = new LineOut());
-
-                printSample(sample);
-
                 var samplePlayerOptional = createPlayer(synth, sample, lineOut);
                 if (samplePlayerOptional.isEmpty()) {
                     LOGGER.error("Sound player for {} unavailable, skipping", soundVariant);
@@ -72,9 +63,6 @@ public class AuxSoundPlayer implements SoundPlayer {
                 }
 
                 var player = samplePlayerOptional.get();
-
-                // Start synthesizer using default stereo output at 44100 Hz.
-                synth.start();
 
                 // The rate that can be changed
                 player.rate.set(sample.getFrameRate());
@@ -92,27 +80,18 @@ public class AuxSoundPlayer implements SoundPlayer {
                 if (sample.getSustainBegin() < 0) {
                     player.dataQueue.queue(sample);
                 } else {
-                    // TODO: idk wtf this means
                     player.dataQueue.queueOn(sample);
-                    synth.sleepFor(8.0);
+                    synth.sleepFor(2.0);
                     player.dataQueue.queueOff(sample);
                 }
 
                 do {
-                    synth.sleepFor(5);
+                    synth.sleepFor(1);
                 } while (player.dataQueue.hasMore());
             } catch (Exception e) {
                 LOGGER.error("An error has occurred while playing a sound for key " + keyEnum, e);
             }
         });
-    }
-
-    private void printSample(AudioSample sample) {
-        LOGGER.debug("Sample has: channels  = " + sample.getChannelsPerFrame());
-        LOGGER.debug("            frames    = " + sample.getNumFrames());
-        LOGGER.debug("            rate      = " + sample.getFrameRate());
-        LOGGER.debug("            loopStart = " + sample.getSustainBegin());
-        LOGGER.debug("            loopEnd   = " + sample.getSustainEnd());
     }
 
     private Optional<VariableRateDataReader> createPlayer(Synthesizer synth, AudioSample sample, LineOut lineOut) {

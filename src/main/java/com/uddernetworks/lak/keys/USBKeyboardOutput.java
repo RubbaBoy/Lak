@@ -14,9 +14,10 @@ public class USBKeyboardOutput implements KeyboardOutput {
     private static final Logger LOGGER = LoggerFactory.getLogger(USBKeyboardOutput.class);
 
     @Override
-    public void outputKey(KeyEnum keyEnum) {
-        LOGGER.warn("TODO: Output {}", keyEnum);
-        // TODO: Add output for Raspberry Pi
+    public void outputKey(KeyEnum keyEnum, KeyAction keyAction) {
+        if (keyAction != KeyAction.HELD) {
+            LOGGER.warn("TODO: Output {}", keyEnum);
+        }
     }
 
 }

@@ -12,8 +12,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -50,7 +48,7 @@ public class DevEventKeyboardInput implements KeyboardInput {
                         LOGGER.debug("Pressing 'A'");
 
                         try {
-                            keyboardInterceptor.receiveKey(KeyEnum.KEY_A);
+                            keyboardInterceptor.receiveKey(KeyEnum.KEY_A, KeyAction.PRESSED);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -69,14 +67,21 @@ public class DevEventKeyboardInput implements KeyboardInput {
                     try {
                         lock.tryLock(9999, TimeUnit.DAYS);
 
+                        // TODO: Investigate this method. In testing with the Raspberry Pi Zero W, the format seemed very
+                        //       different from the linux standard one defined in Section 5 of https://www.kernel.org/doc/Documentation/input/input.txt
+                        //       What I can tell, is each keystroke produces 16 bytes versus the normal 24. It also
+                        //       produces an extra 16 bytes of what I can tell is useless with a type of 0. There's also
+                        //       6 bytes at the end I don't know what to do with that seem to always be 0.
+
                         var b = bruh.read(read);
-                        if (b == 24) {
+                        if (b == 16) {
                             var buffer = ByteBuffer.wrap(read);
-                            var sec = getBigInt(buffer, 8).longValue(); // Seconds
-                            var usec = getBigInt(buffer, 8).longValue(); // Microseconds
+                            var sec = getBigInt(buffer, 4).longValue(); // Seconds
+                            var usec = getBigInt(buffer, 4).longValue(); // Microseconds
                             var type = getBigInt(buffer, 2).shortValue(); // Type is for example EV_REL for relative moment, EV_KEY for a keypress or release. More types are defined in include/uapi/linux/input-event-codes.h.
                             var code = getBigInt(buffer, 2).intValue(); // Code is event code, for example REL_X or KEY_BACKSPACE, again a complete list is in include/uapi/linux/input-event-codes.h.
-                            var value = getBigInt(buffer, 4).intValue(); // Value is the value the event carries. Either a relative change for EV_REL, absolute new value for EV_ABS (joysticks ...), or 0 for EV_KEY for release, 1 for keypress and 2 for autorepeat.
+                            var value = getBigInt(buffer, 2).intValue(); // Value is the value the event carries. Either a relative change for EV_REL, absolute new value for EV_ABS (joysticks ...), or 0 for EV_KEY for release, 1 for keypress and 2 for autorepeat.
+                            // Idk what the last 3 bytes are
 
                             if (type != 1) {
                                 continue;
@@ -96,11 +101,11 @@ public class DevEventKeyboardInput implements KeyboardInput {
                             var key = keyOptional.get();
                             var action = actionOptional.get();
 
-                            keyboardInterceptor.receiveKey(key);
-
-                            LOGGER.debug("{} Key: {} {}", sec, key, action.name());
+                            keyboardInterceptor.receiveKey(key, action);
                         }
                     } catch (InterruptedException ignored) {
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     } finally {
                         lock.unlock();
                     }
@@ -130,25 +135,5 @@ public class DevEventKeyboardInput implements KeyboardInput {
             arr2[i2++] = arr[i];
         }
         return new BigInteger(arr2);
-    }
-
-    enum KeyAction {
-        RELEASED(0),
-        PRESSED(1),
-        HELD(2);
-
-        private final int value;
-
-        KeyAction(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public static Optional<KeyAction> fromValue(int value) {
-            return Arrays.stream(values()).filter(action -> action.value == value).findFirst();
-        }
     }
 }

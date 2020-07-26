@@ -1,7 +1,9 @@
 package com.uddernetworks.lak.sounds.jsyn;
 
 import com.jsyn.Synthesizer;
+import com.jsyn.unitgen.LineOut;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public interface JSynPool {
@@ -11,6 +13,6 @@ public interface JSynPool {
      *
      * @param synthConsumer The consumer to consume the generated {@link Synthesizer}
      */
-    void provisionAsyncSynth(Consumer<Synthesizer> synthConsumer);
+    void provisionAsyncSynth(BiConsumer<Synthesizer, LineOut> synthConsumer);
 
 }

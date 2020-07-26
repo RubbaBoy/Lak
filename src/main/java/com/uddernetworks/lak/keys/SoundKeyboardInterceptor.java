@@ -22,14 +22,15 @@ public class SoundKeyboardInterceptor implements KeyboardInterceptor {
     }
 
     @Override
-    public void receiveKey(KeyEnum keyEnum) {
-        LOGGER.debug("Playing sound for {}", keyEnum);
+    public void receiveKey(KeyEnum keyEnum, KeyAction keyAction) {
 
-        if (soundEnabled) {
+//        if (soundEnabled) {
+        if (keyAction == KeyAction.PRESSED) {
             soundPlayer.playSound(keyEnum);
         }
+//        }
 
-        keyboardOutput.outputKey(keyEnum);
+        keyboardOutput.outputKey(keyEnum, keyAction);
     }
 
     @Override

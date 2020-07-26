@@ -11,8 +11,9 @@ public interface KeyboardInterceptor {
      * Invoked when a key is received from a {@link KeyboardInput}.
      *
      * @param keyEnum The {@link KeyEnum} being received
+     * @param keyAction
      */
-    void receiveKey(KeyEnum keyEnum);
+    void receiveKey(KeyEnum keyEnum, KeyAction keyAction);
 
     /**
      * Sets the sound to be enabled/disabled.

@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-// TODO: Test
 @Component("cachedSoundSourceManager")
 public class CachedSoundSourceManager implements SoundSourceManager {
 
@@ -26,25 +25,14 @@ public class CachedSoundSourceManager implements SoundSourceManager {
 
     public CachedSoundSourceManager(@Qualifier("variableSoundManager") SoundManager soundManager) {
         this.soundManager = soundManager;
-        LOGGER.debug("sopund manager = {}", soundManager);
         SampleLoader.setJavaSoundPreferred(false);
     }
 
     @Override
     public Optional<AudioSample> getOrCreate(SoundVariant soundVariant) {
-        System.out.println("wtffffffffffff");
-        LOGGER.debug("beforeeeeeee");
-        LOGGER.debug("sources = {}", sources);
-        System.out.println("soundVariant = " + soundVariant);
         return Optional.ofNullable(sources.computeIfAbsent(soundVariant.getId(), $ -> {
             try {
-                LOGGER.debug("hereeeee {}", soundManager);
-                System.out.println("soundVariant = " + soundVariant);
-                System.out.println("soundVariant.getSound() = " + soundVariant.getSound());
-                System.out.println("soundVariant.getSound().getRelativePath() = " + soundVariant.getSound().getRelativePath());
-                System.out.println("last = " + soundManager.convertSoundPath(soundVariant.getSound().getRelativePath()));
                 var file = soundManager.convertSoundPath(soundVariant.getSound().getRelativePath()).toFile();
-                LOGGER.debug("file = {}", file);
                 return SampleLoader.loadFloatSample(file);
             } catch (IOException e) {
                 LOGGER.error("An error occurred while trying to load the audio file for " + soundVariant, e);

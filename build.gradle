@@ -16,8 +16,8 @@ dependencies {
     implementation 'com.jsyn:jsyn:17.0.0-SNAPSHOT'
 
     implementation project(':pi-api')
-    implementation project(':dummy-pi')
-//    implementation project(':pi')
+//    implementation project(':dummy-pi')
+    implementation project(':pi')
 
     testImplementation 'org.hsqldb:hsqldb:2.5.0'
     runtimeOnly 'com.h2database:h2'
@@ -89,4 +89,8 @@ artifacts {
 test {
     environment 'SOUND_PATH', 'src/test/resources/sounds'
     useJUnitPlatform()
+}
+
+bootRun {
+    environment = ['SOUND_PATH': 'E:\\lak\\sounds' ]
 }

@@ -10,7 +10,8 @@ public interface KeyboardOutput {
      * Outputs a given {@link KeyEnum}.
      *
      * @param keyEnum The {@link KeyEnum} to output
+     * @param keyAction
      */
-    void outputKey(KeyEnum keyEnum);
+    void outputKey(KeyEnum keyEnum, KeyAction keyAction);
 
 }

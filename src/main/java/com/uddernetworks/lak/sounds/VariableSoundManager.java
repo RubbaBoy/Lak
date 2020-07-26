@@ -33,12 +33,11 @@ public class VariableSoundManager implements SoundManager {
 
     public VariableSoundManager(@Qualifier("sqlSoundRepository") SoundRepository soundRepository) {
         this.soundRepository = soundRepository;
-        this.soundPath = Paths.get(System.getenv("SOUND_PATH"));
+        this.soundPath = Paths.get("/home/pi/sounds");
     }
 
     @Override
     public Path convertSoundPath(String relativePath) {
-        LOGGER.debug("Converting sound path '{}' with root '{}' result: '{}'", relativePath, soundPath.toAbsolutePath(), soundPath.resolve(relativePath));
         return soundPath.resolve(relativePath);
     }
 
