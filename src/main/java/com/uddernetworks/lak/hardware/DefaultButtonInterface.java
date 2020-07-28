@@ -65,12 +65,19 @@ public class DefaultButtonInterface implements ButtonInterface {
             sleep(1000);
         });
 
-        // End initial sequence
+        // End initial sequence  >>=
+
+        LOGGER.debug("Red = {}", buttonHandler.buttonFromId(ButtonId.RED));
 
         buttonHandler.buttonFromId(ButtonId.RED)
-                .ifPresent(button ->
-                        button.setListener(pressed -> lightHandler.lightFromId(LightId.RED_BUTTON)
-                                .ifPresent(light -> light.setStatus(pressed))));
+                .ifPresent(button -> {
+                    LOGGER.debug("Button precent");
+                    button.setListener(pressed -> {
+                        LOGGER.debug("Red pressed!");
+                        lightHandler.lightFromId(LightId.RED_BUTTON)
+                                .ifPresent(light -> light.setStatus(pressed));
+                    });
+                });
 
         buttonHandler.buttonFromId(ButtonId.GREEN)
                 .ifPresent(button -> {
