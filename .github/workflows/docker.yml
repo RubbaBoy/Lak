@@ -40,7 +40,7 @@ jobs:
       - name: Create docker shield
         uses: RubbaBoy/BYOB@v1.1.0
         with:
-          NAME: hs
+          NAME: lak
           LABEL: docker
           STATUS: "lak:${{ steps.get_branch.outputs.branch }}-${{ steps.get_hash.outputs.hash }}"
           COLOR: 0576B7
