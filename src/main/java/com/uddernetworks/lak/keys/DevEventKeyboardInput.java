@@ -1,6 +1,5 @@
 package com.uddernetworks.lak.keys;
 
-import com.uddernetworks.lak.api.ApiConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,7 +41,7 @@ public class DevEventKeyboardInput implements KeyboardInput {
                 var event0 = new File("/dev/input/event0");
                 if (!event0.exists()) {
 
-                    LOGGER.warn("event0 doesn't exist, going to scheduled presses! {}", ApiConst.huh);
+                    LOGGER.warn("event0 doesn't exist, going to scheduled presses!");
 
                     while (true) {
                         LOGGER.debug("Pressing 'A'");
