@@ -14,15 +14,15 @@ public enum GPIOAbstractedLight implements AbstractedLight {
     /**
      * The light inside of the {@link GPIOAbstractedButton#RED}.
      */
-    BUTTON_RED(LightId.RED_BUTTON, "Red Button", 27),
+    BUTTON_RED(LightId.RED_BUTTON, "Red Button", 16),
     /**
      * The light inside of the {@link GPIOAbstractedButton#GREEN}.
      */
-    BUTTON_GREEN(LightId.GREEN_BUTTON, "Green Button", 29),
+    BUTTON_GREEN(LightId.GREEN_BUTTON, "Green Button", 21),
     /**
      * The light inside of the {@link GPIOAbstractedButton#BLUE}.
      */
-    BUTTON_BLUE(LightId.BLUE_BUTTON, "Blue Button", 28);
+    BUTTON_BLUE(LightId.BLUE_BUTTON, "Blue Button", 20);
 
     private final LightId lightId;
     private final int[] gpioPins;

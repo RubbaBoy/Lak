@@ -34,6 +34,7 @@ public class VariableSoundManager implements SoundManager {
     public VariableSoundManager(@Qualifier("sqlSoundRepository") SoundRepository soundRepository) {
         this.soundRepository = soundRepository;
         this.soundPath = Paths.get("/home/pi/sounds");
+//        this.soundPath = Paths.get("E:\\lak\\sounds");
     }
 
     @Override

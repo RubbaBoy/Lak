@@ -72,7 +72,7 @@ public class SoundInitializer implements RepositoryInitializer {
         var soundSize = soundManager.getAllSounds().size();
         if (soundSize == 0) {
             LOGGER.debug("No sounds loaded, adding a default one");
-            var sound = new FileSound(UUID.randomUUID(), "elliot.wav");
+            var sound = new FileSound(UUID.randomUUID(), "key.wav");
             soundManager.addSound(sound);
             var variant = soundManager.addSoundVariant(sound);
             LOGGER.debug("Created sound {} and variant {}", sound.getId(), variant.getId());

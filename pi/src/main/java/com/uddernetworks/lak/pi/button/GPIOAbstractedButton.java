@@ -7,9 +7,9 @@ import com.uddernetworks.lak.api.button.ButtonId;
 import java.util.Arrays;
 
 public enum GPIOAbstractedButton implements AbstractedButton {
-    RED(ButtonId.RED, "Red", 14), // GPIO_14
-    GREEN(ButtonId.GREEN, "Green", 24), // GPIO_24
-    BLUE(ButtonId.BLUE, "Blue", 22); // GPIO_22
+    RED(ButtonId.RED, "Red", 11),
+    GREEN(ButtonId.GREEN, "Green", 19),
+    BLUE(ButtonId.BLUE, "Blue", 6);
 
     private final ButtonId buttonId;
     private final String name;

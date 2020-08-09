@@ -1,7 +1,5 @@
 package com.uddernetworks.lak.pi;
 
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
 import com.uddernetworks.lak.api.PiDetails;
 import com.uddernetworks.lak.api.PiManager;
 import com.uddernetworks.lak.api.button.ButtonHandler;
@@ -47,13 +45,6 @@ public class PiConfig {
     @Bean
     LightHandler lightHandler(@Qualifier("gpioPinController") PinController pinController) {
         return new GPIOLightHandler(pinController);
-    }
-
-    // The following is from Pi4J
-
-    @Bean
-    GpioController gpio() {
-        return GpioFactory.getInstance();
     }
 
 }

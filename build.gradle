@@ -13,7 +13,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.hsqldb:hsqldb:2.5.0'
-    implementation 'com.github.RubbaBoy:JSyn:gradle-SNAPSHOT'
+//    implementation 'com.github.RubbaBoy:JSyn:gradle-SNAPSHOT'
+    implementation 'com.jsyn:jsyn:17.0.0-SNAPSHOT'
 
     implementation project(':pi-api')
 //    implementation project(':dummy-pi')
@@ -44,7 +45,8 @@ allprojects {
     group = 'com.uddernetworks.lak'
 
     repositories {
-        maven { url 'https://jitpack.io' }
+//        maven { url 'https://jitpack.io' }
+        mavenLocal()
         mavenCentral()
     }
 

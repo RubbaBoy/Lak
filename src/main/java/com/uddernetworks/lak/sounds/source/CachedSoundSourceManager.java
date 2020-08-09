@@ -25,7 +25,6 @@ public class CachedSoundSourceManager implements SoundSourceManager {
 
     public CachedSoundSourceManager(@Qualifier("variableSoundManager") SoundManager soundManager) {
         this.soundManager = soundManager;
-        SampleLoader.setJavaSoundPreferred(false);
     }
 
     @Override
