@@ -26,7 +26,6 @@ public class LakApplication implements ApplicationListener<ApplicationReadyEvent
     private final ButtonHandler<AbstractedButton> buttonHandler;
     private final LightHandler<AbstractedLight> lightHandler;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     public LakApplication(@Qualifier("devEventKeyboardInput") KeyboardInput keyboardInput,
                           PiManager piManager,
                           ButtonInterface buttonInterface,

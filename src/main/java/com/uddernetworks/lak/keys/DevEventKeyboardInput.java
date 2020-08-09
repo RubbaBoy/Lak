@@ -43,21 +43,23 @@ public class DevEventKeyboardInput implements KeyboardInput {
 
                     LOGGER.warn("event0 doesn't exist, going to scheduled presses!");
 
-                    while (true) {
-                        LOGGER.debug("Pressing 'A'");
+//                    while (true) {
+//                        LOGGER.debug("Pressing 'A'");
+//
+//                        try {
+//                            keyboardInterceptor.receiveKey(KeyEnum.KEY_A, KeyAction.PRESSED);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                        try {
+//                            Thread.sleep(5000);
+//                        } catch (InterruptedException ignored) {
+//                            ignored.printStackTrace();
+//                        }
+//                    }
 
-                        try {
-                            keyboardInterceptor.receiveKey(KeyEnum.KEY_A, KeyAction.PRESSED);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException ignored) {
-                            ignored.printStackTrace();
-                        }
-                    }
+                    return;
                 }
 
                 var bruh = new FileInputStream(event0);

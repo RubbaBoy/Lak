@@ -103,7 +103,7 @@ public class GPIOPinController implements PinController {
         LOGGER.debug("Adding listener for pin {}", pin);
         listeners.put(pin, value -> {
             LOGGER.debug("Change pin {}: {}", pin, value.name());
-            listener.accept(value.isHigh());
+            listener.accept(!value.isHigh());
         });
     }
 }

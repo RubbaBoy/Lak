@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import static com.uddernetworks.lak.sounds.jsyn.JSynUtility.startLineOut;
+
 @Component("auxSoundPlayer")
 public class AuxSoundPlayer implements SoundPlayer {
 
@@ -53,7 +55,6 @@ public class AuxSoundPlayer implements SoundPlayer {
         jSynPool.provisionAsyncSynth((synth, lineOut) ->
                 playerPoolManager.provisionPlayer(synth, sample, lineOut, player -> {
                     try {
-                        // The rate that can be changed
                         player.rate.set(sample.getFrameRate());
 
                         LOGGER.debug("Synth going with {} mods", soundVariant.getModulators());
@@ -64,19 +65,7 @@ public class AuxSoundPlayer implements SoundPlayer {
 
                         // We only need to start the LineOut. It will pull data from the
                         // sample player.
-                        lineOut.start();
-
-                        if (sample.getSustainBegin() < 0) {
-                            player.dataQueue.queue(sample);
-                        } else {
-                            player.dataQueue.queueOn(sample);
-                            synth.sleepFor(2.0);
-                            player.dataQueue.queueOff(sample);
-                        }
-
-                        do {
-                            synth.sleepFor(0.1);
-                        } while (player.dataQueue.hasMore());
+                        startLineOut(synth, sample, lineOut, player);
                     } catch (Exception e) {
                         LOGGER.error("An error has occurred while playing a sound for key " + keyEnum, e);
                     }

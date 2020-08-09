@@ -3,10 +3,14 @@ package com.uddernetworks.lak.sounds.jsyn;
 import com.jsyn.JSyn;
 import com.jsyn.Synthesizer;
 import com.jsyn.unitgen.LineOut;
+import com.uddernetworks.lak.concurrency.BiCompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.AbstractMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
@@ -33,6 +37,13 @@ public class CachedJSynPool implements JSynPool {
 
         synth.add(lineOut = new LineOut());
         synth.start(DEFAULT_FRAME_RATE, -1, 0, headphones.orElse(-1), 2);
+    }
+
+    @Override
+    public BiCompletableFuture<Synthesizer, LineOut> provisionAsyncSynth() {
+        var completableFuture = new BiCompletableFuture<Synthesizer, LineOut>();
+        provisionAsyncSynth(completableFuture::complete);
+        return completableFuture;
     }
 
     @Override

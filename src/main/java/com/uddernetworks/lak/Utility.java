@@ -3,6 +3,9 @@ package com.uddernetworks.lak;
 import java.awt.Color;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -168,5 +171,27 @@ public class Utility {
      */
     public static String readResourceString(String path) throws IOException {
         return new String(readResource(path));
+    }
+
+    /**
+     * Creates a map from a given list of key and values, in the form of an array. This is a replacement for
+     * {@link Map#of()}.
+     *
+     * @param keyValues The key and values of the map, must be a multiple of 2
+     * @param <K> The key type
+     * @param <V> The value type
+     * @return The created map
+     */
+    public static <K, V> Map<K, V> bigMapOf(Object... keyValues) {
+        if (keyValues.length % 2 == 1) {
+            keyValues = Arrays.copyOfRange(keyValues, 0, keyValues.length - 1);
+        }
+
+        var map = new HashMap<K, V>();
+        for (int i = 0; i < keyValues.length; i += 2) {
+            map.put((K) keyValues[i], (V) keyValues[i + 1]);
+        }
+
+        return map;
     }
 }
