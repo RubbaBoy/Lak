@@ -6,15 +6,9 @@ import java.util.UUID;
 
 public class KeyEndpointBodies {
     public static class UpdatingKey {
-        private final KeyEnum key;
-        private final UUID variantId;
-        private final Boolean loop;
-
-        public UpdatingKey(KeyEnum key, UUID variantId, Boolean loop) {
-            this.key = key;
-            this.variantId = variantId;
-            this.loop = loop;
-        }
+        private KeyEnum key;
+        private UUID variantId;
+        private Boolean loop;
 
         public KeyEnum getKey() {
             return key;

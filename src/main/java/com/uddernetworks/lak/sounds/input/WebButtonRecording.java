@@ -63,6 +63,7 @@ public class WebButtonRecording implements Recording {
 
                 var sound = new FileSound(UUID.randomUUID(), soundPath);
                 soundManager.addSound(sound);
+                soundManager.addSoundVariant("Default", sound);
 
                 completer.complete(sound);
             } catch (IOException e) {

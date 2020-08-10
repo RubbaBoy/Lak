@@ -21,9 +21,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.UUID;
 
@@ -70,6 +77,29 @@ public class SoundController {
     public @ResponseBody
     Map<String, String> recordSound(@RequestBody SoundEndpointBodies.RecordingSound recordingSound) {
         recording.prepareRecording(recordingSound.getName());
+        return Map.of("status", "ok");
+    }
+
+    @PostMapping(path = "/uploadSound")
+    public @ResponseBody
+    Map<String, String> uploadSound(@RequestParam("file") MultipartFile file,
+                                    RedirectAttributes redirectAttributes) throws IOException {
+        if (file.getOriginalFilename() == null) {
+            LOGGER.error("Couldn't get file name!");
+            return Map.of("status", "not ok");
+        }
+
+        var name = new File(file.getOriginalFilename()).getName();
+
+        LOGGER.debug("Saving sound {}", name);
+
+        var saving = soundManager.convertSoundPath(name);
+        Files.write(saving, file.getBytes());
+
+        var sound = new FileSound(UUID.randomUUID(), name);
+        soundManager.addSound(sound);
+        soundManager.addSoundVariant("Default", sound);
+
         return Map.of("status", "ok");
     }
 

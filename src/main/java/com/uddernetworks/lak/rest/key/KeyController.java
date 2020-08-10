@@ -4,6 +4,8 @@ import com.uddernetworks.lak.keys.Key;
 import com.uddernetworks.lak.keys.KeyEnum;
 import com.uddernetworks.lak.keys.KeyManager;
 import com.uddernetworks.lak.rest.exceptions.KeyNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*")
 @RequestMapping(path = "/keys")
 public class KeyController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(KeyController.class);
 
     private final KeyManager keyManager;
 

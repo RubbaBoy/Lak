@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 @Component("auxSoundInput")
 public class AuxSoundInput implements SoundInput {
@@ -23,8 +22,6 @@ public class AuxSoundInput implements SoundInput {
     private final JSynPool jSynPool;
     private final SoundManager soundManager;
 
-    private boolean recording;
-    private String recordingName;
     private Synthesizer synth;
     private WaveRecorder recorder;
     private String relativePath;

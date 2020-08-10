@@ -19,18 +19,15 @@ public class AuxSoundPlayer implements SoundPlayer {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuxSoundPlayer.class);
 
     private final KeyManager keyManager;
-    private final SoundManager soundManager;
     private final SoundSourceManager soundSourceManager;
     private final JSynPool jSynPool;
     private final PlayerPoolManager playerPoolManager;
 
     public AuxSoundPlayer(@Qualifier("defaultKeyManager") KeyManager keyManager,
-                          @Qualifier("variableSoundManager") SoundManager soundManager,
                           @Qualifier("cachedSoundSourceManager") SoundSourceManager soundSourceManager,
                           @Qualifier("cachedJSynPool") JSynPool jSynPool,
                           @Qualifier("cachedPlayerPoolManager") PlayerPoolManager playerPoolManager) {
         this.keyManager = keyManager;
-        this.soundManager = soundManager;
         this.soundSourceManager = soundSourceManager;
         this.jSynPool = jSynPool;
         this.playerPoolManager = playerPoolManager;
@@ -57,9 +54,7 @@ public class AuxSoundPlayer implements SoundPlayer {
                     try {
                         player.rate.set(sample.getFrameRate());
 
-                        LOGGER.debug("Synth going with {} mods", soundVariant.getModulators());
                         for (var modulator : soundVariant.getModulators()) {
-                            LOGGER.debug("Modding with {}", modulator);
                             modulator.modulateSound(synth, player);
                         }
 

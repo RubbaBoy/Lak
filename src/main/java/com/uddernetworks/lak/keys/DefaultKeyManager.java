@@ -56,17 +56,21 @@ public class DefaultKeyManager implements KeyManager {
 
     @Override
     public void updateKey(KeyEndpointBodies.UpdatingKey updatingKey) {
+        LOGGER.debug("Updating hereeee");
+
         var storedKeyOptional = keys.stream().filter(key -> key.getKey() == updatingKey.getKey()).findFirst();
         if (storedKeyOptional.isPresent()) {
             var storedKey = storedKeyOptional.get();
 
             var variantId = updatingKey.getVariantId();
+            LOGGER.debug("Variant is {}", variantId);
             if (variantId != null) {
                 soundManager.getVariant(variantId)
                         .ifPresent(storedKey::setSound);
             }
 
             var loop = updatingKey.isLoop();
+            LOGGER.debug("Looping {}", loop);
             if (loop != null) {
                 storedKey.setLoop(loop);
             }
